@@ -1,0 +1,463 @@
+
+%%%%%%%%%%%%%%%%%%%%%%% file template.tex %%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This is a general template file for the LaTeX package SVJour3
+% for Springer journals.          Springer Heidelberg 2010/09/16
+%
+% Copy it to a new file with a new name and use it as the basis
+% for your article. Delete % signs as needed.
+%
+% This template includes a few options for different layouts and
+% content for various journals. Please consult a previous issue of
+% your journal as needed.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% First comes an example EPS file -- just ignore it and
+% proceed on the \documentclass line
+% your LaTeX will extract the file if required
+\begin{filecontents*}{example.eps}
+%!PS-Adobe-3.0 EPSF-3.0
+%%BoundingBox: 19 19 221 221
+%%CreationDate: Mon Sep 29 1997
+%%Creator: programmed by hand (JK)
+%%EndComments
+gsave
+newpath
+  20 20 moveto
+  20 220 lineto
+  220 220 lineto
+  220 20 lineto
+closepath
+2 setlinewidth
+gsave
+  .4 setgray fill
+grestore
+stroke
+grestore
+\end{filecontents*}
+%
+\RequirePackage{fix-cm}
+%
+\documentclass{svjour3}                     % onecolumn (standard format)
+%\documentclass[smallcondensed]{svjour3}     % onecolumn (ditto)
+%\documentclass[smallextended]{svjour3}       % onecolumn (second format)
+%\documentclass[twocolumn]{svjour3}          % twocolumn
+%
+\smartqed  % flush right qed marks, e.g. at end of proof
+%
+\usepackage{graphicx}
+\usepackage{caption}    
+\usepackage{subfig} 
+%
+% \usepackage{mathptmx}      % use Times fonts if available on your TeX system
+%
+% insert here the call for the packages your document requires
+%\usepackage{latexsym}
+% etc.
+%
+% please place your own definitions here and don't use \def but
+% \newcommand{}{}
+%
+% Insert the name of "your journal" with
+% \journalname{myjournal}
+%
+\begin{document}
+
+\title{The Pandora multi-algorithm approach to automated pattern recognition of cosmic-ray muon and test beam events in the ProtoDUNE-SP detector
+%\thanks{Grants or other notes
+%about the article that should go on the front page should be
+%placed here. General acknowledgments should be placed at the end of the article.}
+}
+%\subtitle{Do you have a subtitle?\\ If so, write it here}
+
+%\titlerunning{Short form of title}        % if too long for running head
+
+\author{First Author         \and
+        Second Author %etc.
+}
+
+%\authorrunning{Short form of author list} % if too long for running head
+
+\institute{F. Author \at
+              first address \\
+              Tel.: +123-45-678910\\
+              Fax: +123-45-678910\\
+              \email{fauthor@example.com}           %  \\
+%             \emph{Present address:} of F. Author  %  if needed
+           \and
+           S. Author \at
+              second address
+}
+
+\date{Received: date / Accepted: date}
+% The correct dates will be entered by the editor
+
+
+\maketitle
+
+\begin{abstract}
+Insert your abstract here. Include keywords, PACS and mathematical
+subject classification numbers as needed.
+\keywords{First keyword \and Second keyword \and More}
+% \PACS{PACS code1 \and PACS code2 \and more}
+% \subclass{MSC code1 \and MSC code2 \and more}
+\end{abstract}
+
+\section{Introduction}
+\label{intro}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis consectetur neque vel urna accumsan, sed tincidunt sapien tincidunt. Aenean imperdiet vitae odio rhoncus sollicitudin. Praesent nec vehicula ante. Cras aliquam hendrerit lectus, nec rutrum urna tempor a. Aliquam sit amet mattis nisl. Nam molestie a elit consectetur auctor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ac magna id turpis euismod accumsan.
+
+Aliquam gravida urna a arcu euismod, eget ultricies enim placerat. Vestibulum ultrices ultricies eleifend. Proin vestibulum risus eu ultrices condimentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam id urna in dui tristique feugiat. Nullam in dui diam. Etiam sit amet eros vel mi egestas scelerisque sed nec nibh. Vivamus imperdiet risus sed quam commodo vehicula. Nulla in arcu scelerisque, luctus urna ut, ullamcorper est. Fusce tristique eros in tempus egestas. Phasellus non mattis risus. Quisque sed tristique lectus. Donec porttitor commodo enim dictum facilisis.
+
+Pellentesque consequat accumsan auctor. Vivamus efficitur urna a augue molestie lacinia. Morbi et facilisis quam. Praesent libero velit, lobortis ac posuere sit amet, pharetra non nunc. Donec porttitor malesuada tristique. Suspendisse suscipit ultrices turpis, congue mattis odio facilisis ac. Proin ornare metus a velit lacinia, non vulputate massa ultrices. Proin diam leo, tristique non lectus ut, pellentesque malesuada enim. Phasellus tortor nulla, cursus ac sapien in, tempor sollicitudin ante. Ut ac dui nec erat eleifend varius. Vestibulum placerat urna quis feugiat imperdiet.
+
+Aliquam at nisl et eros pulvinar varius. Suspendisse potenti. Quisque eu augue eu urna finibus facilisis. Sed lobortis lacinia viverra. Pellentesque aliquet tincidunt augue a elementum. Nunc dictum felis ac nunc hendrerit, et finibus massa feugiat. Praesent lacinia tellus et tortor dictum, vitae posuere ligula commodo. Suspendisse placerat, nibh quis rutrum laoreet, nisl orci convallis metus, a scelerisque tortor mi bibendum purus. Pellentesque felis erat, consectetur fringilla commodo a, dapibus scelerisque metus. Ut quis bibendum quam.
+
+Proin viverra, tellus ac eleifend suscipit, mauris ex condimentum ante, eget pulvinar ante massa quis sapien. Sed in dolor vitae tortor dapibus suscipit. In at ipsum odio. Nullam ut facilisis quam, at tempus quam. In molestie mauris eget dolor hendrerit, eget placerat diam congue. Suspendisse molestie lacus sit amet nibh lobortis lobortis. Vivamus gravida nisl vitae ligula tristique, a consequat nunc feugiat.
+
+
+%-Abstract and introduction, covering Pandora background, its use across LArTPC programme, ProtoDUNE and aspects of the pattern recognition problem specific to ProtoDUNE.
+%-ProtoDUNE details.
+%-Pattern recognition. We?d reference the MicroBooNE algorithm description, give an executive summary of PandoraCosmic and explain how PandoraTestBeam differs from PandoraNu. In the MicroBooNE paper, we used a two-pass reconstruction, but explicitly said that this would become more sophisticated soon. This then allows us to explain the consolidated reconstruction properly, making this a major communication goal of the paper. Includes stitching, more on slicing, beam particle id.
+%-Performance assessment, using MC and metrics consistent with MicroBooNE paper to assess quality of pattern recognition, understand contributions to efficiency, etc., but then moving into real data plots. Inclusion of all of the latest and greatest plots, with (ideally!) explanation of the key features.
+%-Concluding comments (short).
+
+\section{ProtoDUNE-SP}
+\label{sec:1}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis consectetur neque vel urna accumsan, sed tincidunt sapien tincidunt. Aenean imperdiet vitae odio rhoncus sollicitudin. Praesent nec vehicula ante. Cras aliquam hendrerit lectus, nec rutrum urna tempor a. Aliquam sit amet mattis nisl. Nam molestie a elit consectetur auctor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ac magna id turpis euismod accumsan.
+
+Aliquam gravida urna a arcu euismod, eget ultricies enim placerat. Vestibulum ultrices ultricies eleifend. Proin vestibulum risus eu ultrices condimentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam id urna in dui tristique feugiat. Nullam in dui diam. Etiam sit amet eros vel mi egestas scelerisque sed nec nibh. Vivamus imperdiet risus sed quam commodo vehicula. Nulla in arcu scelerisque, luctus urna ut, ullamcorper est. Fusce tristique eros in tempus egestas. Phasellus non mattis risus. Quisque sed tristique lectus. Donec porttitor commodo enim dictum facilisis.
+
+Pellentesque consequat accumsan auctor. Vivamus efficitur urna a augue molestie lacinia. Morbi et facilisis quam. Praesent libero velit, lobortis ac posuere sit amet, pharetra non nunc. Donec porttitor malesuada tristique. Suspendisse suscipit ultrices turpis, congue mattis odio facilisis ac. Proin ornare metus a velit lacinia, non vulputate massa ultrices. Proin diam leo, tristique non lectus ut, pellentesque malesuada enim. Phasellus tortor nulla, cursus ac sapien in, tempor sollicitudin ante. Ut ac dui nec erat eleifend varius. Vestibulum placerat urna quis feugiat imperdiet.
+
+Aliquam at nisl et eros pulvinar varius. Suspendisse potenti. Quisque eu augue eu urna finibus facilisis. Sed lobortis lacinia viverra. Pellentesque aliquet tincidunt augue a elementum. Nunc dictum felis ac nunc hendrerit, et finibus massa feugiat. Praesent lacinia tellus et tortor dictum, vitae posuere ligula commodo. Suspendisse placerat, nibh quis rutrum laoreet, nisl orci convallis metus, a scelerisque tortor mi bibendum purus. Pellentesque felis erat, consectetur fringilla commodo a, dapibus scelerisque metus. Ut quis bibendum quam.
+
+Proin viverra, tellus ac eleifend suscipit, mauris ex condimentum ante, eget pulvinar ante massa quis sapien. Sed in dolor vitae tortor dapibus suscipit. In at ipsum odio. Nullam ut facilisis quam, at tempus quam. In molestie mauris eget dolor hendrerit, eget placerat diam congue. Suspendisse molestie lacus sit amet nibh lobortis lobortis. Vivamus gravida nisl vitae ligula tristique, a consequat nunc feugiat.
+
+\section{Pattern Recognition}
+In order to fully exploit the imaging capabilities of liquid argon time projection chambers for particle physics, a paradigm shift in the field of reconstruction is required.  The detailed images of interactions LArTPCs produce make it possible to track individual particles throughout the detector and to build up a hierarchy describing their interactions.  This presents the reconstruction software the challenge of identifying each particle as well as building up the topology of their interactions.
+
+The ProroDUNE-SP LArTPC produces three sets of 2D images, wire number vs drift time, of particle interactions, hereby known as the \textit{u}, \textit{v} and \textit{w} views.  In order to deliver the highest quality reconstruction possible, Pandora takes the approach of performing 2D reconstruction first in order to group clusters of hits together and then, the unique and vital step, to correlate features of those clusters across all three views.  By correlating features across the three views, features that were obscured in certain views can be recovered.  This correlation and interpretation process is analogous to stereoscopy, whereby the brain is able to interpret the two dimensional inputs from the eyes into a consistent 3D world view.  It is this fundamental biological process that Pandora is attempting to replicate for use in LArTPC experiments.  Once consistent matches have been made across all three views Pandora beings a 3D reconstruction phase.  The reconstruction is completed by ordering the reconstructed particles into a hierarchy. Details of the algorithm chains used in the ProtoDUNE-SP reconstruction can be found in section \ref{sec:algchains}.
+
+\subsection{Algorithm Chains}
+\label{sec:algchains}
+\subsubsection{Pandora Test Beam}
+
+The Pandora Test Beam algorithm chain was developed from the Pandora Neutrino algorithm chain discussed in \cite{pandorauboone}.  The philosophy of both of these algorithm chain is the identification of a primary interaction vertex, whether that be from a neutrino or a test beam particle interaction, and the reconstruction of daughter particles emanating from that vertex.  Once this is complete, an additional algorithm, the TestBeamParticleCreation algorithm, runs in the Pandora Test Beam algorithm chain to identify the primary incident test beam particle.  The reconstructed particle hierarchy is then adjusted accordingly to reflect this parent.  An illustration showing the hierarchy before and after the implementation of this algorithm is shown in figure BLAH.
+
+%Worth saying anything about the adjustment of the length scale cut for determining track/shower ID?
+
+%Reference the basis as Pandora Neutrino.  Highlight test beam particle creation algorithm.  Add lots of pictures of both tracks and shower events.
+
+\subsubsection{Pandora Cosmic}
+
+The Pandora Cosmic algorithm chain \cite{pandorauboone} was developed to target the reconstruction of track-oriented particles i.e. cosmic ray muons.  Reconstructed showers are assumed to be delta rays and the primary interaction vertex is taken as the highest y point of the track.
+
+As the ProtoDUNE-SP LArTPC detector consists of two adjacent independent drift volumes, it is possible for Pandora to identify the true time that the cosmic ray passed through the detector if it crosses the central cathode plane.  This can be done as any deviation from the trigger start time for the detector will result in either an increase or decrease in the effective drift time for the ionization electrons in the detector.  This results in the reconstructed 3D particles being bodily shifted by equal and opposite amounts in either drift volume.  By associating pairs of particles in opposing drift volumes together, based on the direction the particles point in and their relative locations in the y-z plane, it is possible shift them by equal and opposite amounts in drift time until they form a consistent single 3D particle, as demonstrated in figure \ref{fig:stitching}.  Metrics describing the precision of this procedure can be found in section \ref{sec:crmetrics}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{Figures/EventDisplays/Stitching/StitchingExample.pdf}
+\caption{An example of the stitching procedure.  Particles in green are those identified as belonging to the same true cosmic ray particle, while those in red are the outcome after a shift in drift time has been applied.}
+\label{fig:stitching}
+\end{figure}
+
+%Mention stitching here. 
+
+%Reference the MicroBooNE paper.
+
+\subsection{Consolidated Reconstruction}
+\label{sec:consolidatedreco}
+
+As the appropriate algorithm chain to apply to any individual parent particle interaction varies depending on whether that particle is a cosmic ray muon or a test beam particle, additional logic beyond that contained in the algorithm chains themselves is needed to apply and persist the appropriate reconstruction. This additional logic is applied within the consolidated reconstruction, which is outlined in figure \ref{fig:consolidatedreco}.  
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{Figures/Diagram/ConsolidatedReco.pdf}
+\caption{Outline of the Pandora consolidated reconstruction.}
+\label{fig:consolidatedreco}
+\end{figure}
+
+The consolidated reconstruction begins by running the Pandora Cosmic algorithm chain that reconstructs all particles under the cosmic ray particle hypothesis.  The reconstructed particles are then examined in order to determine if they are clear cosmic rays.  Two distinct methods are used for identifying clear cosmic rays:
+
+\begin{itemize}
+\item If the hits for the reconstructed particle fall outside the expected read out time window for the target test beam particle.
+\item If it the reconstructed particle enters the detector through the top face and exists the lower face.  
+\end{itemize}
+
+Reconstructed particles identified as clear cosmic rays are then set aside to form one part of the reconstructed event output and what remains in the event is analyzed further.  The remaining hits are put through a slicing procedure that is designed to group hits together across all three views into regions that contain a single parent particle interaction.  Slicing involves running a reduced version of the full reconstruction, where particles are reconstructed up to 3D, but the finesse of particle hierarchies is not considered.  By reconstructing the particles up to 3D, correlations across the three input views are considered when dividing up the event into separate regions, or slices.  This is more powerful than dividing up each view independently.  Each slice is then dissolved back into input hits and the Pandora Test Beam and Cosmic algorithm chains applied.  
+
+%\subsubsection{Test Beam Particle ID}
+% Not sure whether this needs to be its own subsubsection, but thought it would be sensible to put it in one for now as plots will be needed showing the input distributions and training etc...
+At this stage each slice has two possible reconstructed outputs, based on the test beam and cosmic hypotheses respectively.  These reconstruction outputs are then compared in order to determine the most appropriate output to persist.  In ProtoDUNE a Boosted Decision Tree (BDT) is used for this decision.  The following features are used as inputs to the boosted decision tree:
+
+\begin{itemize}
+\item The distance of the closest 3D LArTPC hit to the beam spot.
+\item The direction and angle of a spatial fit to the reconstructed 3D hits with respect to the beam line.
+\item The eigenvalues of the covariance matrix of the spatial position of the 3D LArTPC hits.
+\item The vertical distance of the reconstructed 3D LArTPC hit closest to the top of the detector.
+\item The number of reconstructed particles.
+\end{itemize}
+
+The distribution of the output BDT scores for signal, triggered beam particles, and background, cosmic rays and beam halo, is shown in figure \ref{fig:bdtid} alongside distributions of the selected variables used in the BDT.  The distribution of non-triggered particles does have a small peak at the same score as the triggered particles as some non-triggered beam particles will be halo particles from the beam that look topologically similar to signal.  Any slice with a BDT score greater than -0.225 is classified as a test beam particle and the Pandora Test Beam reconstruction output is persisted while all other slices are reconstructed as cosmic rays with the Pandora Cosmic hypothesis persisted.  This cut yields a signal efficiency of $99.5 \pm 0.2$\% and a background rejection of $95.3 \pm 0.1$\%.
+
+\begin{figure}
+\subfloat[]{\includegraphics[width=1.0\textwidth]{Figures/TestBeamId/BDTScore.pdf}\label{fig:bdtidscore}} \\
+\subfloat[]{\includegraphics[width=0.33\textwidth]{Figures/TestBeamId/DistanceToBeamSpot.pdf}\label{fig:bdtidvar1}}
+\subfloat[]{\includegraphics[width=0.33\textwidth]{Figures/TestBeamId/SupplementaryAngleToBeam.pdf}\label{fig:bdtidvar2}}
+\subfloat[]{\includegraphics[width=0.33\textwidth]{Figures/TestBeamId/MaxY.pdf}\label{fig:bdtidvar3}}
+\caption{The distribution of the BDT score for triggered particles and all remaining particles for both the training and test samples is shown in figure \ref{fig:bdtidscore}.  Figures \ref{fig:bdtidvar1}, \ref{fig:bdtidvar2} and \ref{fig:bdtidvar3} show distributions of selected variables in the BDT used in the test beam id step.  These variables were calculated using the test beam reconstruction for the slice, however, the corresponding variables obtained using the cosmic ray reconstruction are also propagated into the BDT training step.}
+\label{fig:bdtid}
+\end{figure}
+
+\section{Assessment of Pattern Recognition}
+
+Validating pattern recognition performance is essential in order for Pandora to provide a high quality reconstruction that is ready for physics analyses.  
+
+\subsection{Monte-Carlo}
+\label{sec:mcmetrics}
+
+For ProtoDUNE-SP a mirrored approach to that taken for evaluating the performance at MicroBooNE was taken \cite{pandorauboone}.  This involves matching MCPartilces with reconstructed particles based on the number of shared hits.  
+
+% This is very similar to the MicroBooNE paper, but the metrics are key so I am reluctant to purely cite.  For now go with similar text and figure out later. 
+Before evaluating performance metrics a selection of cuts are applied in order to ensure that the MC particles referenced in these metrics are reconstructable, that is the MC particle must produce a sufficient number of hits in the detector and must not produce an isolated and diffuse topology.  In detail these cuts require that the MC particle produced at least 15 hits in the detector with at least 5 hits in two of the three views.  Furthermore, MC particle hits produced downstream of a far travelling neutron, or, if the target particle is track-like, a far-travelling photon are vetoed to veto topologies involving low energy particles being captured and nuclear excitation producing neutrons and photons.
+
+Once these matches have been made the following metrics can be defined:
+
+\begin{itemize}
+    \item Efficiency : The fraction of MCParticles that are matched to at least one reconstructed particle.
+    \item Purity : For a given pairing, the fraction of hits in the reconstructed particle that are shared with the MCParticle.
+    \item Completeness : For a given pairing, the fraction of hits in the MCParticle that are shared with the reconstructed particle.
+\end{itemize}
+
+When MC particles are matched to reconstructed particles, matches are only made if the purity of the match is greater than 50\% in order to ensure that the reconstructed particle is predominantly associated with the MC particle, above all others, in question.  Furthermore, a completeness of 10\% is required in order to veto low quality matches.  These cuts are not applied when reporting the completeness and purity of matches.  
+
+When evaluating these metrics, matches made on an event basis by finding the match involving the largest number of shared hits between the MC and reconstructed particle match.  Once this match is made the MC and reconstructed particles are declared unavailable, preventing further matches to either being made.  This process is then repeated to match all remaining particles in the event.  At this stage all MC and reconstructed particles have at most one match.  Any remaining reconstructed particles that have no match are associated to the MC particle, that by definition must already have a single match, that they share the most hits with irrespective of the number of matches the MCParticle currently has.
+
+\begin{figure}
+\includegraphics[width=0.3\textwidth]{Figures/EventDisplays/MC/ReconstructionU.pdf}
+\includegraphics[width=0.3\textwidth]{Figures/EventDisplays/MC/ReconstructionV.pdf}
+\includegraphics[width=0.3\textwidth]{Figures/EventDisplays/MC/ReconstructionW.pdf} \\
+\includegraphics[width=0.75\textwidth]{Figures/EventDisplays/MC/Reconstruction.pdf} 
+\caption{Please write your figure caption here}
+\label{fig:1a}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=0.75\textwidth]{Figures/EventDisplays/MC/EventComposition.pdf} 
+\caption{An example of the reconstruction output for a MC 7 GeV pion event at ProtoDUNE-SP.}
+\label{fig:1b}
+\end{figure}
+
+\subsubsection{Test Beam Metrics}
+
+Using the MCC11 ProtoDUNE-SP simulation the triggered test beam particle reconstruction was studied. For this sample the breakdown of different particle species is shown in table \ref{tab:mcc11species}.  In order to perform a fair comparison to ProtoDUNE-SP data in following sections, only positively charged triggered test beam particle species are considered.
+
+\begin{table}
+\centering
+\caption{The number of triggered test beam particle events for the ProtoDUNE-SP MCC11 sample.}
+\label{tab:mcc11species} 
+\begin{tabular}{cc}
+\hline\noalign{\smallskip}
+Particle Species & Entries  \\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+$\pi^{+}$ & 8874 \\
+$e^{+}$ & 6699 \\
+$p$ & 2164 \\
+$K^{+}$ & 452 \\
+$\mu^{+}$ & 233 \\
+\noalign{\smallskip}\hline
+\end{tabular}
+\end{table}
+
+Figure \ref{fig:tbrecoeff} shows the reconstruction efficiency for the triggered test beam particles as a function of the number of 2D hits in the detector and the true momentum of the particle.  As the number of hits in the detector increases the reconstruction efficiency increases and eventually plateaus around 1000 hits at 80\%.  The inefficiencies in the reconstruction efficiency originate from the affect of cosmic ray and beam particle halo contamination.  As shown in figure \ref{fig:tbrecoeffbrkdwn}, removing cosmic rays and beam particle halo improves the reconstruction efficiency to an integrated value of 94\%.  The remaining failure mode is inefficiencies in the test beam particle identification step.
+
+Figure \ref{fig:tbrecopurcom} shows the purity and completeness of the reconstructed test beam particle.  Both of these distributions peak at 1, indicating a good reconstruction performance. By referring to figure \ref{fig:tbrecoeffbrkdwn}, it becomes clear that the primary degradation mechanism for purity is mixing of the triggered test beam particle with beam halo overlay, while completeness degrades due to splitting up of the reconstructed test beam particle, even in the absence of any contamination.  
+
+\begin{figure}
+\includegraphics[width=0.5\textwidth]{Figures/Metrics/MC/Beam/BeamParticleEfficiencyBreakdownVsNHits.pdf}
+\includegraphics[width=0.5\textwidth]{Figures/Metrics/MC/Beam/BeamParticleEfficiencyBreakdownVsMomentum.pdf}
+\caption{The test beam particle reconstruction efficiency as a function of the number of hits in the test beam particle and the test beam particle momentum in MC.}
+\label{fig:tbrecoeff}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=0.5\textwidth]{Figures/Metrics/MC/Beam/BeamParticleCompleteness.pdf}
+\includegraphics[width=0.5\textwidth]{Figures/Metrics/MC/Beam/BeamParticlePurity.pdf}
+\caption{The purity and completeness of reconstructed test beam particles in MC.}
+\label{fig:tbrecopurcom}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.45\textwidth]{Figures/Metrics/MC/Beam/Breakdown/BeamParticleEfficiencyBreakdownVsNHits.pdf}
+\includegraphics[width=0.45\textwidth]{Figures/Metrics/MC/Beam/Breakdown/BeamParticleEfficiencyBreakdownVsMomentum.pdf} \\
+\includegraphics[width=0.45\textwidth]{Figures/Metrics/MC/Beam/Breakdown/BeamParticleCompleteness.pdf}
+\includegraphics[width=0.45\textwidth]{Figures/Metrics/MC/Beam/Breakdown/BeamParticlePurity.pdf}
+\caption{The test beam particle reconstruction efficiency metric when removing cosmic rays and beam halo.}
+\label{fig:tbrecoeffbrkdwn}
+\end{figure}
+
+\begin{table}
+\centering
+\caption{The reconstruction efficiency for the test beam particle in MC as a function of beam momenta.}
+\label{tab:1} 
+\begin{tabular}{cc}
+\hline\noalign{\smallskip}
+Beam Momenta [GeV] & Reconstructed Efficiency  \\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+1 & 87.5$\pm$0.8 \\
+2 & 91.0$\pm$0.7 \\
+3 & 92.7$\pm$0.6 \\
+4 & 89.8$\pm$0.5 \\
+5 & 89.0$\pm$0.5 \\
+6 & 82.1$\pm$0.7 \\
+7 & 75.4$\pm$0.7 \\
+\noalign{\smallskip}\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Cosmic Ray Metrics}
+\label{sec:crmetrics}
+Figure \ref{fig:crrecoeff} shows the reconstruction efficiency for cosmic rays as a function of the number of hits in the detector, which yields an integrated efficiency of 95\%.  The purity and completeness of the reconstructed cosmic rays are shown in figure \ref{fig:crrecopurcom}, both of which show strong peaks at 1.
+
+\begin{figure}
+\includegraphics[width=0.75\textwidth]{Figures/Metrics/MC/Cosmics/CosmicRayEfficiencyVsNHits.pdf}
+\caption{The reconstruction efficiency for cosmic rays in MC as a function of number of hits.}
+\label{fig:crrecoeff}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=0.5\textwidth]{Figures/Metrics/MC/Cosmics/CosmicRayCompleteness.pdf}
+\includegraphics[width=0.5\textwidth]{Figures/Metrics/MC/Cosmics/CosmicRayPurity.pdf}
+\caption{The purity and completeness of reconstructed cosmic ray particles in MC.}
+\label{fig:crrecopurcom}
+\end{figure}
+
+It is also possible to tag the true $T_{0}$ of reconstructed cosmic rays if they are stitched by the processed discussed in section \ref{sec:consolidatedreco}.  The distribution of the resolution of the reconstructed $T_{0}$ for cosmic rays is shown in figure \ref{fig:crt0res}.  As expected, the impact of space charge in the simulation leads to a degradation in the $T_{0}$ resolution and the addition of the fluid flow model, which includes asymmetric space charge effects, leads to further degradation.  
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{Figures/Metrics/MC/Cosmics/CosmicRayT0Resolustion.pdf}
+\caption{The resolution on the reconstructed $T_{0}$ for cosmic rays in MC.}
+\label{fig:crt0res}
+\end{figure}
+
+In order to give context to the topologies that the reconstruction is faced with at ProtoDUNE-SP an estimate of the number of cosmic rays passing through the detector per event.  The number of reconstructed cosmic rays matched to clear cosmic rays, i.e. depositing more than 100 hits in the detector, is shown as a function of the number of clear cosmic rays in figure \ref{fig:crnperevt}.  This shows that, on a per event basis, the reconstruction is predominantly working on the reconstruction of cosmic rays.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{Figures/Metrics/MC/Cosmics/CRMatchesCosmicRayEvent.pdf}
+\caption{The number of matched reconstructed cosmic rays per event as a function of the true number of cosmic rays for cosmic rays depositing more than 100 hits in the detector.  The cut at 100 hits allows a clearer comparison to be made to data in subsequent studies due to the higher reconstruction efficiency for these cosmic rays with respect to those depositing less than 100 hits.}
+\label{fig:crnperevt}
+\end{figure}
+
+\subsection{Data}
+
+ProtoDUNE took test beam data at CENR between October and December 2018.  What follows is a flavour of how the Monte-Carlo metrics discussed above compare to data.  This data presents the Pandora reconstruction with several unique challenges that have not been seen at other active LArTPC experiments, such as stitching of cosmic rays due to the presence of multiple drift volumes is possible and the reconstruction is that of test beam particles not neutrinos.  
+
+\subsubsection{Test Beam Metrics}
+
+A crucial metric describing the performance of the pattern recognition at ProtoDUNE-SP is the triggered test beam particle reconstruction efficiency.  This metric folds in effects from each step of the reconstruction procedure and crucially the test beam particle id step.  In order for a reconstructed event to be counted as efficient, a reconstructed object must be classified as originating from the test beam.  As access to the underlying truth information for data is not possible, the reconstruction metric used for this data MC comparison does not use the matching procedure described in section \ref{sec:mcmetrics}.  Instead an event is deemed efficient when for:
+
+\begin{itemize}
+    \item \textbf{Data} The trigger is active and indicates the presence of a single particle and there is a reconstructed test beam particle in the event output.
+    \item \textbf{Monte-Carlo} There is a triggered test beam particle in the MC particle hierarchy and there is a reconstructed test beam particle in the event output.
+\end{itemize}
+
+The reconstruction efficiency for ProtoDUNE for separate beam momentum runs is shown in table \ref{tab:dataeff}.  
+
+\begin{table}
+\centering
+\caption{The reconstruction efficiency for the test beam particle in data as a function of beam momenta.}
+\label{tab:dataeff} 
+\begin{tabular}{cc}
+\hline\noalign{\smallskip}
+Beam Momenta [GeV] & Reconstructed Efficiency  \\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+1 & 70.6$\pm$0.3 \\
+2 & 84.2$\pm$0.3 \\
+3 & 86.8$\pm$0.2 \\
+6 & 85.2$\pm$0.2 \\
+7 & 83.7$\pm$0.2 \\
+\noalign{\smallskip}\hline
+\end{tabular}
+\end{table}
+
+The ProtoDUNE trigger also measures the momentum of the triggered test beam particle, therefore the reconstruction efficiency is plotted as a function of the triggered test beam particle momentum in figure \ref{fig:datamcrecoeff}.  
+
+\begin{figure}
+\includegraphics[width=1.0\textwidth]{Figures/Metrics/Data/Beam/BeamParticleEfficiencyVsMomentum.pdf}
+\caption{The test beam particle reconstruction efficiency as a function of the number of hits in the test beam particle and the test beam particle momentum.}
+\label{fig:datamcrecoeff}
+\end{figure}
+
+Overall, there is a typically good agreement between the reconstruction efficiency for data and MC with integrated efficiencies of ~80\% and \%80 respectively.  As a function of momentum, additional features are present.  In particular, at low momentum, where the reconstruction efficiency for data is lower than MC, and high momentum, where the reconstruction efficiency is higher for data than MC.  The disparity at low momentum is due to the trigger being active for certain events, but no clear test beam particle appearing in the detector.  %Probably missing justification here  
+For high momentum the disparity is due to an overestimation of the beam halo in the MC samples.  This is evident from figure \ref{fig:tbrecoeffbrkdwn}, which indicates that the impact of cosmic rays at high beam momenta is almost negligible, while the beam halo dominates in inefficiencies in the reconstruction efficiency.  
+
+In addition to the reconstruction efficiency it is also possible to evaluate some higher level metrics for the reconstructed test beam particle.  For example figure \ref{fig:openingangles} shows the opening angle between the reconstructed and expected direction of the triggered test beam particle.  For data the trigger provides a measurement of the particle direction, while for MC truth information is used for comparison.  While differences are present it is encouraging that both of these distributions peak at low values of opening angle.  The same distributions divided into track and shower like triggered test beam particles are included.  The broader distribution for showers indicates that, as expected, estimation of the direction of a clean single track like 3D particle is more precise than the estimation of a more disperse shower like object.   
+
+\begin{figure}
+\subfloat[]{\includegraphics[width=1.0\textwidth]{Figures/Metrics/Data/Beam/BeamParticleOpeningAngle.pdf}\label{fig:openingangle}} \\
+\subfloat[]{\includegraphics[width=0.5\textwidth]{Figures/Metrics/Data/Beam/BeamParticleOpeningAngleElectron.pdf}\label{fig:openingangleshw}}
+\subfloat[]{\includegraphics[width=0.5\textwidth]{Figures/Metrics/Data/Beam/BeamParticleOpeningAnglePiPlus.pdf}\label{fig:openingangletrk}}
+\caption{\subref{fig:openingangle} The opening angle between a linear fit to the start of the reconstructed test beam particle as it enters the TPC and the MC truth direction direction.  \subref{fig:openingangleshw} and \subref{fig:openingangletrk} show the same distributions for $e^{+}$ and $\pi^{+}$ triggered particles only.}
+\label{fig:openingangles}
+\end{figure}
+
+\subsubsection{Cosmic Ray Metrics}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis consectetur neque vel urna accumsan, sed tincidunt sapien tincidunt. Aenean imperdiet vitae odio rhoncus sollicitudin. Praesent nec vehicula ante. Cras aliquam hendrerit lectus, nec rutrum urna tempor a. Aliquam sit amet mattis nisl. Nam molestie a elit consectetur auctor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ac magna id turpis euismod accumsan.
+
+\begin{figure}
+\includegraphics[width=1.0\textwidth]{Figures/Metrics/Data/Cosmics/NumberofReconstructedCosmicRays.pdf}
+\caption{Please write your figure caption here}
+\label{fig:9}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=1.0\textwidth]{Figures/Metrics/Data/Cosmics/StitchedT0.pdf}
+\caption{Please write your figure caption here}
+\label{fig:10}
+\end{figure}
+
+\section{Conclusions}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis consectetur neque vel urna accumsan, sed tincidunt sapien tincidunt. Aenean imperdiet vitae odio rhoncus sollicitudin. Praesent nec vehicula ante. Cras aliquam hendrerit lectus, nec rutrum urna tempor a. Aliquam sit amet mattis nisl. Nam molestie a elit consectetur auctor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ac magna id turpis euismod accumsan.
+
+Aliquam gravida urna a arcu euismod, eget ultricies enim placerat. Vestibulum ultrices ultricies eleifend. Proin vestibulum risus eu ultrices condimentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam id urna in dui tristique feugiat. Nullam in dui diam. Etiam sit amet eros vel mi egestas scelerisque sed nec nibh. Vivamus imperdiet risus sed quam commodo vehicula. Nulla in arcu scelerisque, luctus urna ut, ullamcorper est. Fusce tristique eros in tempus egestas. Phasellus non mattis risus. Quisque sed tristique lectus. Donec porttitor commodo enim dictum facilisis.
+
+Pellentesque consequat accumsan auctor. Vivamus efficitur urna a augue molestie lacinia. Morbi et facilisis quam. Praesent libero velit, lobortis ac posuere sit amet, pharetra non nunc. Donec porttitor malesuada tristique. Suspendisse suscipit ultrices turpis, congue mattis odio facilisis ac. Proin ornare metus a velit lacinia, non vulputate massa ultrices. Proin diam leo, tristique non lectus ut, pellentesque malesuada enim. Phasellus tortor nulla, cursus ac sapien in, tempor sollicitudin ante. Ut ac dui nec erat eleifend varius. Vestibulum placerat urna quis feugiat imperdiet.
+
+%\begin{acknowledgements}
+%If you'd like to thank anyone, place your comments here
+%and remove the percent signs.
+%\end{acknowledgements}
+
+% BibTeX users please use one of
+%\bibliographystyle{spbasic}      % basic style, author-year citations
+%\bibliographystyle{spmpsci}      % mathematics and physical sciences
+%\bibliographystyle{spphys}       % APS-like style for physics
+%\bibliography{}   % name your BibTeX data base
+
+% Non-BibTeX users please use
+\begin{thebibliography}{}
+%
+% and use \bibitem to create references. Consult the Instructions
+% for authors for reference list style.
+%
+\bibitem{pandorauboone}
+Acciarri, R. and others, The Pandora multi-algorithm approach to automated pattern recognition of cosmic-ray muon and neutrino events in the MicroBooNE detector, Eur. Phys. J., C78, 82 (2018)
+\bibitem{RefJ}
+% Format for Journal Reference
+Author, Article title, Journal, Volume, page numbers (year)
+% Format for books
+\bibitem{RefB}
+Author, Book title, page numbers. Publisher, place (year)
+% etc
+\end{thebibliography}
+
+\end{document}
+% end of file template.tex
+
