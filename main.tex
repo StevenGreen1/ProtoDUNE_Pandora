@@ -49,6 +49,7 @@ grestore
 \usepackage{graphicx}
 \usepackage{caption}    
 \usepackage{subfig} 
+\usepackage{todonotes}
 %
 % \usepackage{mathptmx}      % use Times fonts if available on your TeX system
 %
@@ -64,7 +65,7 @@ grestore
 %
 \begin{document}
 
-\title{The Pandora multi-algorithm approach to automated pattern recognition of cosmic-ray muon and test beam particles in the ProtoDUNE-SP detector
+\title{The Pandora multi-algorithm approach to automated pattern recognition of cosmic-ray muon and test beam particle interactions in the ProtoDUNE-SP detector
 %\thanks{Grants or other notes
 %about the article that should go on the front page should be
 %placed here. General acknowledgments should be placed at the end of the article.}
@@ -100,7 +101,7 @@ grestore
 \maketitle
 
 \begin{abstract}
-Pattern recognition is an essential aspect of event reconstruction at Liquid-Argon Time-Porjection Chamber detectors.  The Pandora software package has been developed and successfully applied to several ongoing neutrino LArTPC detector experiments.  Now Pandora is being applied to ProtoDUNE-SP, a test beam experiment prototyping detector technologies for use at the DUNE far detector.  The Pandora multi-algorithm approach to pattern recognition enables complex, high energy test beam particle interaction topologies to be reconstructed successfully and the interaction hierarchy determined.  This paper gives an overview of the Pandora reconstruction algorithms used for ProtoDUNE-SP and evaluates the performance on both simulation and data.
+Pattern recognition is an essential aspect of event reconstruction at Liquid-Argon Time-Porjection Chamber detectors.  The Pandora software package has been developed and successfully applied to several ongoing neutrino LArTPC detector experiments.  Now Pandora is being applied to ProtoDUNE-SP, a test beam experiment prototyping detector technologies for use at the DUNE far detector.  The Pandora multi-algorithm approach to pattern recognition enables complex, high energy test beam particle interaction topologies to be reconstructed successfully and the interaction hierarchy determined.  This paper gives an overview of the Pandora reconstruction algorithms used for ProtoDUNE-SP and evaluates the performance for both simulation and data.
 \keywords{Pattern recognition \and Event reconstruction \and Neutrino detectors \and Time-projection chambers \and DUNE \and ProtoDUNE-SP}
 % \PACS{PACS code1 \and PACS code2 \and more}
 % \subclass{MSC code1 \and MSC code2 \and more}
@@ -108,9 +109,11 @@ Pattern recognition is an essential aspect of event reconstruction at Liquid-Arg
 
 \section{Introduction}
 \label{sec:intro}
-The ProtoDUNE-SP detector is a single phase liquid argon time projection chamber (LArTPC) detector that is a prototype for use at the DUNE far detector.  It was completed abd began taking data in late 2018, recording test beam data at CERNs Neutrino Platform from October to the start of the long shutdown in December 2018.  The detector is continuing to take cosmic ray data during the shutdown.  The primary engineering goal of the ProtoDUNE-SP detector is to prototype the production of large scale TPCs for use at the DUNE far detector.  Alongside refinement of production procedures, ProtoDUNE-SP has several physics goals related to testing the reconstruction and performing detector calibration in a controlled environment.  Furthermore, measurements of the cross-section for various test beam particle species on a liquid argon target will be crucial for modeling neutrino interactions at the DUNE far detector.
+ProtoDUNE-SP is a single phase liquid argon time projection chamber (LArTPC) detector prototype for the DUNE far detector.  It was completed and began taking data in late 2018, recording test beam data at CERNs Neutrino Platform from October to the start of the long shutdown in December.  The detector is continuing to take cosmic ray data during the shutdown.  
 
-Pandora is a software package that has been developed for event reconstruction in high energy physics and that is now being used at ProtoDUNE-SP.  It consists of a framework, the Pandora Software Development Kit (SDK) \cite{pandorasdk}, and a number of different content libraries containing the pattern recognition logic for specific experiments.  Although originally developed for event reconstruction at future linear $\text{e}^{+}\text{e}^{-}$ colliders, Pandora has been successfully applied for event reconstruction at LArTPC experiments including the MicroBooNE experiment \cite{pandorauboone}.  Pandora bring a multi-alogirthm philosophy to event reconstruction, whereby algorithms are sequentially applied to build up the reconstruction from the base inputs.  Each algorithm within Pandora is designed to be relatively simple and conservative in order to not introduce erros that would require resolving by subsequent algorithms.  Pandora now also incorporates machine learning techniques, such as boosted decision trees and support vector machines, to drive key decisions that have to be made at certain junctions of the reconstruction. 
+The primary engineering goal of the ProtoDUNE-SP detector is to prototype the production of large scale TPCs for use at the DUNE far detector.  Alongside refinement of production procedures, ProtoDUNE-SP has several physics goals related to testing the reconstruction and performing detector calibration in a controlled environment.  Furthermore, measurements of the cross-section for various test beam particle species on a liquid argon target will be crucial for modeling neutrino interactions at the DUNE far detector.
+
+Pandora is a software package that has been developed for event reconstruction in high energy physics and is now in use at ProtoDUNE-SP.  It consists of a framework, the Pandora Software Development Kit (SDK) \cite{pandorasdk}, and a number of different, experiment specific, content libraries containing the pattern recognition logic.  Although originally developed for event reconstruction at future linear $\text{e}^{+}\text{e}^{-}$ colliders, Pandora has been successfully applied for event reconstruction at LArTPC experiments including the MicroBooNE experiment \cite{pandorauboone}.  Pandora brings a multi-algorithm philosophy to event reconstruction, whereby algorithms are sequentially applied to build up the reconstruction from the raw inputs.  Each algorithm is designed to be simple and conservative in order to not introduce errors that would require resolving by subsequent algorithms.  Pandora now also incorporates machine learning techniques, such as Boosted Decision Trees (BDTs) and support vector machines, to drive key decisions that have to be made at certain junctions of the reconstruction. 
 
 The Pandora reconstruction algorithms used at ProtoDUNE-SP mirror those used at MicroBooNE, which are extensively described in \cite{pandorauboone}.  Therefore, the aim of this paper is to give an overview of thsoe algorithms, highlighting specific ProtoDUNE-SP related developments, and to evaluate the performance of Pandora for both ProtoDUNE-SP simulation and data.  Section \ref{sec:protodunesp} describes the ProtoDUNE-SP detector and section \ref{sec:patrec} described the Pandora reconstruction.  Section \ref{sec:assesmentpatrec} demonstrate an assessment of the pattern performance for both ProtoDUNE-SP simulation and data.  
 
@@ -124,24 +127,27 @@ The Pandora reconstruction algorithms used at ProtoDUNE-SP mirror those used at 
 \label{sec:protodunesp}
 The ProtoDUNE-SP detector is a single phase liquid argon time projection chamber that is extensively described in \cite{pdtdr}.  Only the experiment details related to the pattern recognition side of the reconstruction are discussed in the following section.
 
-The detector is a single-phase LArTPC with a rectangular cuboid geometry with the following dimensions: 7.4~m (horizontal), 6.0~m (vertical) and 7.0~m (longitudinal).  The ProtoDUNE-SP detector has a total volume of 0.77~kt making it the largest monolithic single phase LArTPC constructed to date.  The cryostat capacity required to accommodate that mass of argon is ~580~$\text{m}^{3}$.  The nominal electric field in the active volume is 500~V/cm.  This is provided by the cathode plane assembly (CPA) being held at -180~kV, while the anode plane assembly (APA) is effectively grounded due to the presence of a field cage.  The anode plane assembly houses three planes of wires, two induction, hereby referred to as the \textit{u} and \textit{v} views, and one collection, the \textit{w} view.  The pitch of \textit{u} and \textit{v} views is 4.669~mm, while the pitch of the \textit{w} view is 4.790~mm.  The test beam itself is aligned parallel to the APA plane.  The \textit{u} and \textit{v} wire planes are aligned at $\pm 35.7^{0}$ to the vertical, while the \textit{w} plane wires are vertical.  
+The detector is a single-phase LArTPC with a rectangular cuboid geometry with the following dimensions: 7.4~m (horizontal), 6.0~m (vertical) and 7.0~m (longitudinal).  The ProtoDUNE-SP detector has a total volume of 0.77~kt making it the largest monolithic single phase LArTPC constructed to date.  The cryostat capacity required to accommodate that mass of argon is ~580~$\text{m}^{3}$.  The nominal electric field in the active volume is 500~V/cm.  This is provided by the Cathode Plane Assembly (CPA), which is held at -180~kV, while the Anode Plane Assemblies (APAs) is effectively grounded due to the presence of a field cage.  The anode plane assembly houses three planes of wires, two induction, hereby referred to as the \textit{u} and \textit{v} views, and one collection, the \textit{w} view.  The pitch of \textit{u} and \textit{v} views is 4.669~mm, while the pitch of the \textit{w} view is 4.790~mm.  The test beam itself is aligned parallel to the APA plane.  The \textit{u} and \textit{v} wire planes are aligned at $\pm 35.7^{0}$ to the vertical, while the \textit{w} plane wires are vertical.  
 
 Each wire plane measures the drift time, relative to the trigger offset, of any induced or collected charge signals.  Hits are then formed from the waveforms produced from each wire by fitting the waveforms with a Gaussian.  Prior to the fitting, various detector effects are removed to reduce the background noise.  
 
-As ProtoDUNE-SP is a surface detector, a main challenge of the pattern recognition is to distinguish the cosmic ray backgrounds from the test beam particle signal.  Several other factors also affect the pattern recognition including noise filtering, fitting of the waveform and deconvolution of hit charge deposited on adjacent wires.  
+As ProtoDUNE-SP is a surface detector, a crucial pattern recognition goal is to distinguish the cosmic ray backgrounds from the test beam particle signal.  Several other factors also affect the pattern recognition including noise filtering, fitting of the waveform and deconvolution of hit charge deposited on adjacent wires.  
+
+\todo{Reference for noise filtering etc...}
 
 \section{Pattern Recognition}
 \label{sec:patrec}
-In order to fully exploit the imaging capabilities of liquid argon time projection chambers for particle physics, a paradigm shift in the field of reconstruction is required.  The detailed images of interactions LArTPCs produce make it possible to track individual particles throughout the detector and to build up a hierarchy describing their interactions.  This presents the reconstruction software the challenge of identifying each particle as well as building up the topology of their interactions.
+In order to fully exploit the imaging capabilities of LArTPCs for particle physics, a paradigm shift in the field of reconstruction is required.  The detailed images of interactions LArTPCs produce make it possible to track individual particles throughout the detector and to build up a hierarchy describing their interactions.  This presents the reconstruction with the dual challenges of identifying and reconstructing each individual particle in an interaction and building up the hierarchy of that interaction.
 
-The ProroDUNE-SP LArTPC produces three sets of 2D images, wire number vs drift time, of particle interactions, hereby known as the \textit{u}, \textit{v} and \textit{w} views.  In order to deliver the highest quality reconstruction possible, Pandora takes the approach of performing 2D reconstruction first in order to group clusters of hits together and then, the unique and vital step, to correlate features of those clusters across all three views.  By correlating features across the three views, features that were obscured in certain views can be recovered.  This correlation and interpretation process is analogous to stereoscopy, whereby the brain is able to interpret the two dimensional inputs from the eyes into a consistent 3D world view.  It is this fundamental biological process that Pandora is attempting to replicate for use in LArTPC experiments.  Once consistent matches have been made across all three views Pandora beings a 3D reconstruction phase.  The reconstruction is completed by ordering the reconstructed particles into a hierarchy. Details of the algorithm chains used in the ProtoDUNE-SP reconstruction can be found in section \ref{sec:algchains}.
+The ProroDUNE-SP LArTPC produces three sets of 2D images, wire number vs drift time, of particle interactions, the \textit{u}, \textit{v} and \textit{w} views.  In order to deliver the highest quality reconstruction possible, Pandora takes the approach of performing 2D reconstruction first in order to group clusters of hits together and then to correlate features of those clusters across all three views.  By correlating features across the three views, features that were obscured in certain views can be recovered.  This correlation and interpretation process is analogous to stereoscopy, whereby the brain is able to interpret the two dimensional inputs from the eyes into a consistent 3D world view.  It is this fundamental biological process that Pandora is attempting to replicate for use in LArTPC experiments.  Once consistent matches have been made across all three views Pandora beings a 3D reconstruction phase.  The reconstruction is completed by ordering the reconstructed particles into a hierarchy. Details of the algorithm chains used in the ProtoDUNE-SP reconstruction can be found in section \ref{sec:algchains}.
 
 \subsection{Algorithm Chains}
 \label{sec:algchains}
 \subsubsection{Pandora Test Beam}
 
-The Pandora Test Beam algorithm chain was developed from the Pandora Neutrino algorithm chain discussed in \cite{pandorauboone}.  The philosophy of both of these algorithm chain is the identification of a primary interaction vertex, whether that be from a neutrino or a test beam particle interaction, and the reconstruction of daughter particles emanating from that vertex.  Once this is complete, an additional algorithm, the TestBeamParticleCreation algorithm, runs in the Pandora Test Beam algorithm chain to identify the primary incident test beam particle.  The reconstructed particle hierarchy is then adjusted accordingly to reflect this parent.  An illustration showing the hierarchy before and after the implementation of this algorithm is shown in figure BLAH.
+The Pandora Test Beam algorithm chain was developed from the Pandora Neutrino algorithm chain discussed in \cite{pandorauboone}.  The philosophy of both of these algorithm chain is the identification of a primary interaction vertex, whether that be from a neutrino or a test beam particle interaction, and then reconstruct the daughter particles emanating from that vertex.  Once complete, an additional algorithm, the TestBeamParticleCreation algorithm, runs in the Pandora Test Beam algorithm chain to identify the primary incident test beam particle.  The reconstructed particle hierarchy is then adjusted accordingly.  An illustration showing the hierarchy before and after the implementation of this algorithm is shown in figure BLAH.
 
+\todo{Nice picture of test beam particle creation algorithm in action}
 %Worth saying anything about the adjustment of the length scale cut for determining track/shower ID?
 
 %Reference the basis as Pandora Neutrino.  Highlight test beam particle creation algorithm.  Add lots of pictures of both tracks and shower events.
@@ -150,7 +156,7 @@ The Pandora Test Beam algorithm chain was developed from the Pandora Neutrino al
 
 The Pandora Cosmic algorithm chain \cite{pandorauboone} was developed to target the reconstruction of track-oriented particles i.e. cosmic ray muons.  Reconstructed showers are assumed to be delta rays and the primary interaction vertex is taken as the highest y point of the track.
 
-As the ProtoDUNE-SP LArTPC detector consists of two adjacent independent drift volumes, it is possible for Pandora to identify the true time that the cosmic ray passed through the detector if it crosses the central cathode plane.  This can be done as any deviation from the trigger start time for the detector will result in either an increase or decrease in the effective drift time for the ionization electrons in the detector.  This results in the reconstructed 3D particles being bodily shifted by equal and opposite amounts in either drift volume.  By associating pairs of particles in opposing drift volumes together, based on the direction the particles point in and their relative locations in the y-z plane, it is possible shift them by equal and opposite amounts in drift time until they form a consistent single 3D particle, as demonstrated in figure \ref{fig:stitching}.  Metrics describing the precision of this procedure can be found in section \ref{sec:crmetrics}.
+As the ProtoDUNE-SP LArTPC detector consists of two adjacent independent drift volumes, it is possible for Pandora to identify the true time that the cosmic ray passed through the detector if it crosses the central CPA.  This can be done as any deviation from the trigger start time for the detector will result in either an increase or decrease in the effective drift time for the ionization electrons in the detector.  This results in the reconstructed 3D particles being bodily shifted by equal and opposite amounts in either drift volume.  By associating pairs of particles in opposing drift volumes together, based on the direction the particles point in and their relative locations in the y-z plane, it is possible shift them by equal and opposite amounts in drift time until they form a consistent single 3D particle, as demonstrated in figure \ref{fig:stitching}.  Metrics describing the precision of this procedure can be found in section \ref{sec:crmetrics}.
 
 \begin{figure}
 \centering
@@ -158,6 +164,8 @@ As the ProtoDUNE-SP LArTPC detector consists of two adjacent independent drift v
 \caption{An example of the stitching procedure.  Particles in green are those identified as belonging to the same true cosmic ray particle, while those in red are the outcome after a shift in drift time has been applied.}
 \label{fig:stitching}
 \end{figure}
+
+\todo{Label CPA and APA in stitching figure example.}
 
 %Mention stitching here. 
 
@@ -181,11 +189,11 @@ The consolidated reconstruction begins by running the Pandora Cosmic algorithm c
 \item If it the reconstructed particle enters the detector through the top face and exists the lower face.  
 \end{itemize}
 
-Reconstructed particles identified as clear cosmic rays are then set aside to form one part of the reconstructed event output and what remains in the event is analyzed further.  The remaining hits are put through a slicing procedure that is designed to group hits together across all three views into regions that contain a single parent particle interaction.  Slicing involves running a reduced version of the full reconstruction, where particles are reconstructed up to 3D, but the finesse of particle hierarchies is not considered.  By reconstructing the particles up to 3D, correlations across the three input views are considered when dividing up the event into separate regions, or slices.  This is more powerful than dividing up each view independently.  Each slice is then dissolved back into input hits and the Pandora Test Beam and Cosmic algorithm chains applied.  
+Reconstructed particles identified as clear cosmic rays are then set aside to form one part of the reconstructed event output and the remaining hits in the event are analyzed further.  These hits are put through a slicing procedure that is designed to group hits together across all three views into regions that contain a single parent particle interaction.  \todo{Picture demonstrating slicing in effect}  Slicing involves running a reduced version of the full reconstruction, where particles are reconstructed up to 3D, but the finesse of particle hierarchies is not considered.  By reconstructing the particles up to 3D, correlations across the three input views are considered when dividing up the event into separate regions, or slices.  This is more powerful than dividing up each view independently.  Each slice is then dissolved back into input hits and the Pandora Test Beam and Cosmic algorithm chains applied independently.  
 
 %\subsubsection{Test Beam Particle ID}
 % Not sure whether this needs to be its own subsubsection, but thought it would be sensible to put it in one for now as plots will be needed showing the input distributions and training etc...
-At this stage each slice has two possible reconstructed outputs, based on the test beam and cosmic hypotheses respectively.  These reconstruction outputs are then compared in order to determine the most appropriate output to persist.  In ProtoDUNE a Boosted Decision Tree (BDT) is used for this decision.  The following features are used as inputs to the boosted decision tree:
+At this stage each slice has two possible reconstructed outputs, based on the test beam and cosmic hypotheses respectively.  These reconstruction outputs are then compared in order to determine the most appropriate output to persist.  In ProtoDUNE a BDT is used for this decision.  The following features are used as inputs to the boosted decision tree:
 
 \begin{itemize}
 \item The distance of the closest 3D LArTPC hit to the beam spot.
@@ -195,7 +203,7 @@ At this stage each slice has two possible reconstructed outputs, based on the te
 \item The number of reconstructed particles.
 \end{itemize}
 
-The distribution of the output BDT scores for signal, triggered beam particles, and background, cosmic rays and beam halo, is shown in figure \ref{fig:bdtid} alongside distributions of the selected variables used in the BDT.  The distribution of non-triggered particles does have a small peak at the same score as the triggered particles as some non-triggered beam particles will be halo particles from the beam that look topologically similar to signal.  Any slice with a BDT score greater than -0.225 is classified as a test beam particle and the Pandora Test Beam reconstruction output is persisted while all other slices are reconstructed as cosmic rays with the Pandora Cosmic hypothesis persisted.  This cut yields a signal efficiency of $99.5 \pm 0.2$\% and a background rejection of $95.3 \pm 0.1$\%.
+The distribution of the output BDT scores for signal, triggered beam particles, and background, cosmic rays and beam halo, is shown in figure \ref{fig:bdtid} alongside distributions of the selected variables used in the BDT.  The distribution of non-triggered particles does have a peak in the same region as the triggered particles because certain non-triggered beam particles, halo particles from the beam, look topologically similar to signal.  Any slice with a BDT score greater than -0.225 is classified as a test beam particle and the Pandora Test Beam reconstruction output is persisted, while all other slices are reconstructed persisting the Pandora Cosmic hypothesis.  This cut yields a signal efficiency of $99.5 \pm 0.2$\% and a background rejection of $95.3 \pm 0.1$\% in ProtoDUNE-SP simulation.
 
 \begin{figure}
 \subfloat[]{\includegraphics[width=1.0\textwidth]{Figures/TestBeamId/BDTScore.pdf}\label{fig:bdtidscore}} \\
@@ -206,17 +214,29 @@ The distribution of the output BDT scores for signal, triggered beam particles, 
 \label{fig:bdtid}
 \end{figure}
 
+Figure \ref{fig:examplemcreco} shows an example of the reconstruction output for a simulated ProtoDUNE-SP event, where the test beam particle has been correctly identified from the dense cosmic ray background.  Alongside the 3D reconstructed output, this figure also shows the hits identified as being from the test beam particle in the $u$, $v$ and $w$ views.  These 2D vies provides a clear demonstration of how correlating features between the three views can help to resolve possible ambiguities that would be present when considering each view independently.  
+
+\begin{figure}
+\centering
+\subfloat[]{\includegraphics[width=0.75\textwidth]{Figures/EventDisplays/MC/Reconstruction.pdf}\label{fig:examplemcrecoa}} \\
+\subfloat[]{\includegraphics[width=0.3\textwidth]{Figures/EventDisplays/MC/ReconstructionU.pdf}\label{fig:examplemcrecob}}
+\subfloat[]{\includegraphics[width=0.3\textwidth]{Figures/EventDisplays/MC/ReconstructionV.pdf}\label{fig:examplemcrecoc}}
+\subfloat[]{\includegraphics[width=0.3\textwidth]{Figures/EventDisplays/MC/ReconstructionW.pdf}\label{fig:examplemcrecod}} 
+\caption{An example of the reconstruction output for a simulated MC 7 GeV $\pi^{+}$ event at ProtoDUNE-SP.  Figure \ref{fig:examplemcrecoa} shows the 3D reconstruction output, highlighting a reconstructed particle identified as a test beam particle interaction, while figures \ref{fig:examplemcrecob}, \ref{fig:examplemcrecoc} and \ref{fig:examplemcrecod} show the $u$, $v$ and $w$ view hits respectively for that reconstructed test beam particle.}
+\label{fig:examplemcreco}
+\end{figure}
+
 \section{Assessment of Pattern Recognition}
 \label{sec:assesmentpatrec}
-Validating pattern recognition performance is essential in order for Pandora to provide a high quality reconstruction that is ready for physics analyses.  
+Validating pattern recognition performance is essential in order for Pandora to provide a high quality reconstruction ready for physics analyses.  
 
 \subsection{Monte-Carlo}
 \label{sec:mcmetrics}
+For ProtoDUNE-SP a mirrored approach to that taken for evaluating the performance at MicroBooNE was taken \cite{pandorauboone}.  This involves matching MCParticles with reconstructed particles based on the number of shared hits.  
 
-For ProtoDUNE-SP a mirrored approach to that taken for evaluating the performance at MicroBooNE was taken \cite{pandorauboone}.  This involves matching MCPartilces with reconstructed particles based on the number of shared hits.  
+\todo{This is very similar to the MicroBooNE paper, but the metrics are key so I am reluctant to purely cite.  For now go with similar text and figure out plan later.}
 
-% This is very similar to the MicroBooNE paper, but the metrics are key so I am reluctant to purely cite.  For now go with similar text and figure out later. 
-Before evaluating performance metrics a selection of cuts are applied in order to ensure that the MC particles referenced in these metrics are reconstructable, that is the MC particle must produce a sufficient number of hits in the detector and must not produce an isolated and diffuse topology.  In detail these cuts require that the MC particle produced at least 15 hits in the detector with at least 5 hits in two of the three views.  Furthermore, MC particle hits produced downstream of a far travelling neutron, or, if the target particle is track-like, a far-travelling photon are vetoed to veto topologies involving low energy particles being captured and nuclear excitation producing neutrons and photons.
+Before evaluating performance metrics, a selection of cuts are applied in order to ensure that the MC particles referenced are reconstructable, that is the MC particle must produce a sufficient number of hits in the detector and must not produce an isolated and diffuse topology.  In detail these cuts require that the MC particle produced at least 15 hits in the detector with at least 5 hits in two of the three views.  Furthermore, MC particle hits produced downstream of a far travelling neutron, or, if the target particle is track-like, a far-travelling photon, are removed to veto topologies involving low energy particles being captured and nuclear excitation producing neutrons and photons.
 
 Once these matches have been made the following metrics can be defined:
 
@@ -226,18 +246,9 @@ Once these matches have been made the following metrics can be defined:
     \item Completeness : For a given pairing, the fraction of hits in the MCParticle that are shared with the reconstructed particle.
 \end{itemize}
 
-When MC particles are matched to reconstructed particles, matches are only made if the purity of the match is greater than 50\% in order to ensure that the reconstructed particle is predominantly associated with the MC particle, above all others, in question.  Furthermore, a completeness of 10\% is required in order to veto low quality matches.  These cuts are not applied when reporting the completeness and purity of matches.  
+When MCParticles are matched to reconstructed particles, matches are only made if the purity of the match is greater than 50\% in order to ensure that the reconstructed particle is predominantly associated with a single MCParticle.  Furthermore, a completeness of 10\% is required in order to veto low quality matches.  These cuts are not applied when reporting the completeness and purity of matches.  
 
-When evaluating these metrics, matches made on an event basis by finding the match involving the largest number of shared hits between the MC and reconstructed particle match.  Once this match is made the MC and reconstructed particles are declared unavailable, preventing further matches to either being made.  This process is then repeated to match all remaining particles in the event.  At this stage all MC and reconstructed particles have at most one match.  Any remaining reconstructed particles that have no match are associated to the MC particle, that by definition must already have a single match, that they share the most hits with irrespective of the number of matches the MCParticle currently has.
-
-\begin{figure}
-\includegraphics[width=0.3\textwidth]{Figures/EventDisplays/MC/ReconstructionU.pdf}
-\includegraphics[width=0.3\textwidth]{Figures/EventDisplays/MC/ReconstructionV.pdf}
-\includegraphics[width=0.3\textwidth]{Figures/EventDisplays/MC/ReconstructionW.pdf} \\
-\includegraphics[width=0.75\textwidth]{Figures/EventDisplays/MC/Reconstruction.pdf} 
-\caption{Please write your figure caption here}
-\label{fig:1a}
-\end{figure}
+When evaluating these metrics, matches are made on an event basis by finding the match involving the largest number of shared hits between the MC and reconstructed particle match.  Once this match is made the MC and reconstructed particles are declared unavailable, preventing further matches to either being made.  This process is then repeated to match all remaining particles in the event.  At this stage all MC and reconstructed particles have at most one match.  Any remaining reconstructed particles that have no match are associated to the MC particle, that by definition must already have a single match, that they share the most hits with irrespective of the number of matches the MCParticle currently has.
 
 \begin{figure}
 \includegraphics[width=0.75\textwidth]{Figures/EventDisplays/MC/EventComposition.pdf} 
@@ -266,22 +277,24 @@ $\mu^{+}$ & 233 \\
 \end{tabular}
 \end{table}
 
-Figure \ref{fig:tbrecoeff} shows the reconstruction efficiency for the triggered test beam particles as a function of the number of 2D hits in the detector and the true momentum of the particle.  As the number of hits in the detector increases the reconstruction efficiency increases and eventually plateaus around 1000 hits at 80\%.  The inefficiencies in the reconstruction efficiency originate from the affect of cosmic ray and beam particle halo contamination.  As shown in figure \ref{fig:tbrecoeffbrkdwn}, removing cosmic rays and beam particle halo improves the reconstruction efficiency to an integrated value of 94\%.  The remaining failure mode is inefficiencies in the test beam particle identification step.
+Figure \ref{fig:tbrecoeff} shows the reconstruction efficiency for the triggered test beam particles as a function of the number of 2D hits in the detector and the true momentum of the particle.  As the number of hits in the detector increases the reconstruction efficiency increases and eventually plateaus around 1000 hits at 80\%.  The inefficiencies in the reconstruction efficiency originate from cosmic ray and beam halo contamination.  As shown in figure \ref{fig:tbrecoeffbrkdwn}, removing cosmic rays and beam particle halo improves the reconstruction efficiency to an integrated value of 94\%.  The remaining failure mode is inefficiencies in the test beam particle identification step.
 
-Figure \ref{fig:tbrecopurcom} shows the purity and completeness of the reconstructed test beam particle.  Both of these distributions peak at 1, indicating a good reconstruction performance. By referring to figure \ref{fig:tbrecoeffbrkdwn}, it becomes clear that the primary degradation mechanism for purity is mixing of the triggered test beam particle with beam halo overlay, while completeness degrades due to splitting up of the reconstructed test beam particle, even in the absence of any contamination.  
+Figure \ref{fig:tbrecopurcom} shows the purity and completeness of the reconstructed test beam particle.  Both of these distributions peak at 1, indicating a good reconstruction performance. By referring to figure \ref{fig:tbrecoeffbrkdwn}, it becomes clear that the primary degradation mechanism for purity is mixing of the triggered test beam particle with beam halo overlay, while completeness degrades due to splitting up of the reconstructed test beam particle, even in the absence of any contamination.  \todo{I feel this part needs more, but I don't really know what to say...}
 
 \begin{figure}
-\includegraphics[width=0.45\textwidth]{Figures/Metrics/MC/Beam/BeamParticleEfficiencyBreakdownVsNHits.pdf}
-\includegraphics[width=0.45\textwidth]{Figures/Metrics/MC/Beam/BeamParticleEfficiencyBreakdownVsMomentum.pdf}
-\caption{The test beam particle reconstruction efficiency as a function of the number of hits in the test beam particle and the test beam particle momentum in MC.}
+\centering
+\subfloat[]{\includegraphics[width=0.45\textwidth]{Figures/Metrics/MC/Beam/BeamParticleEfficiencyBreakdownVsNHits.pdf}\label{fig:tbrecoeffnhits}}
+\subfloat[]{\includegraphics[width=0.45\textwidth]{Figures/Metrics/MC/Beam/BeamParticleEfficiencyBreakdownVsMomentum.pdf}\label{fig:tbrecoeffp}}
+\caption{The test beam particle reconstruction efficiency as a function of \subref{fig:tbrecoeffnhits} the number of hits in the test beam particle and \subref{fig:tbrecoeffp} the test beam particle momentum in MC.}
 \label{fig:tbrecoeff}
 \end{figure}
 
 \begin{figure}
-\includegraphics[width=0.45\textwidth]{Figures/Metrics/MC/Beam/BeamParticleCompleteness.pdf}
-\includegraphics[width=0.45\textwidth]{Figures/Metrics/MC/Beam/BeamParticlePurity.pdf}
-\caption{The purity and completeness of reconstructed test beam particles in MC.}
-\label{fig:tbrecopurcom}
+\centering
+\subfloat[]{\includegraphics[width=0.45\textwidth]{Figures/Metrics/MC/Beam/BeamParticleCompleteness.pdf}\label{fig:tbrecocomp}}
+\subfloat[]{\includegraphics[width=0.45\textwidth]{Figures/Metrics/MC/Beam/BeamParticlePurity.pdf}\label{fig:tbrecopur}}
+\caption{\subref{fig:tbrecocomp} The purity and \subref{fig:tbrecopur} completeness of reconstructed test beam particles in simulation.}
+\label{fig:tbrecopuritycomp}
 \end{figure}
 
 \begin{figure}
