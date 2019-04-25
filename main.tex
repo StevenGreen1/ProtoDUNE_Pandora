@@ -51,6 +51,7 @@ grestore
 \usepackage{subfig} 
 \usepackage{todonotes}
 \usepackage{amsmath}
+\newcommand\info[1]{\todo[color=green!40]{#1}}
 %
 % \usepackage{mathptmx}      % use Times fonts if available on your TeX system
 %
@@ -94,6 +95,8 @@ grestore
             \and 
             A. Blake \at 
             University of Lancaster
+            \and
+            DUNE Collaboration
 }
 
 \date{Received: date / Accepted: date}
@@ -102,7 +105,7 @@ grestore
 \maketitle
 
 \begin{abstract}
-Pattern recognition is an essential aspect of event reconstruction at Liquid-Argon Time-Projection Chamber detectors.  The Pandora software package has been developed and successfully applied to several ongoing neutrino LArTPC detector experiments.  Now Pandora is being applied to ProtoDUNE-SP, a test beam experiment prototyping detector technologies for use at the DUNE far detector.  The Pandora multi-algorithm approach to pattern recognition enables complex, high energy test beam particle interaction topologies to be reconstructed successfully and the interaction hierarchy determined.  This paper gives an overview of the Pandora reconstruction algorithms used for ProtoDUNE-SP and evaluates the performance for both simulation and data.
+Pattern recognition is an essential aspect of event reconstruction for Liquid-Argon Time-Projection Chamber (LArTPC) detectors.  The Pandora Software Development Kit (SDK) is a framework developed to apply pattern recognition logic in high energy physics.  Using the SDK, Pandora provides LArTPC event reconstruction through a multi-algorithm approach; the sequential application algorithms designed to incrementally build the reconstructed event.  Pandora has been successfully applied to several ongoing neutrino experiments including MicroBooNE, SBND and ICARUS.  Pandora has now been applied to ProtoDUNE-SP, a test beam experiment prototyping detector technologies for use at the DUNE far detector.  The Pandora multi-algorithm approach to pattern recognition enables complex, high energy test beam particle interaction topologies to be reconstructed and the interaction hierarchy determined in the presence of cosmic-ray muon backgrounds.  This paper gives an overview of the Pandora reconstruction algorithms and how they have been tailored for use at ProtoDUNE-SP.  An evaluation of the performance of Pandora for ProtoDUNE-SP simulation and data is also presented.  The success of the Pandora LArTPC reconstruction at ProtoDUNE-SP is demonstrated by the $81.7 \pm 0.1$~\% reconstruction efficiency for triggered test beam particles.
 \keywords{Pattern recognition \and Event reconstruction \and Neutrino detectors \and Time-projection chambers \and DUNE \and ProtoDUNE-SP}
 % \PACS{PACS code1 \and PACS code2 \and more}
 % \subclass{MSC code1 \and MSC code2 \and more}
@@ -110,27 +113,19 @@ Pattern recognition is an essential aspect of event reconstruction at Liquid-Arg
 
 \section{Introduction}
 \label{sec:intro}
-ProtoDUNE-SP is a single phase liquid argon time projection chamber (LArTPC) detector prototype for the DUNE far detector.  It was completed and began taking data in late 2018, recording test beam data at CERNs Neutrino Platform from October to the start of the long shutdown in December.  The detector is continuing to take cosmic-ray muon data during the shutdown.  
+ProtoDUNE-SP is a single-phase liquid-argon time-projection chamber (LArTPC) detector prototype for the Deep Underground Neutrino Experiment (DUNE) far detector.  Installation of the detector at CERNs Neutrino Platform was completed in the fall of 2018 and it took test beam data from August to the start of the long shutdown in December.  The detector is continuing to take cosmic-ray muon data during the shutdown.  
 
-The primary engineering goal of the ProtoDUNE-SP detector is to prototype the production of large scale TPCs for use at the DUNE far detector.  Alongside refinement of production procedures, ProtoDUNE-SP has several physics goals related to testing the reconstruction and performing detector calibration in a controlled environment.  Furthermore, measurements of the cross-section for various test beam particle species on a liquid argon target will be crucial for modeling neutrino interactions at the DUNE far detector.
+The primary engineering goal of the ProtoDUNE-SP detector is to prototype the production of large scale LArTPCs for use at the DUNE far detector.  Alongside refinement of production procedures, ProtoDUNE-SP has physics goals related to testing the reconstruction and performing detector calibration in a controlled environment.  Furthermore, measurements of the cross-section for various test beam particle species on a liquid argon target will be crucial for modeling neutrino interactions at the DUNE far detector.
 
-Pandora is a software package that has been developed for event reconstruction in high energy physics and is now in use at ProtoDUNE-SP.  It consists of a framework, the Pandora Software Development Kit (SDK) \cite{pandorasdk}, and a number of different, experiment specific, content libraries containing the pattern recognition logic.  Although originally developed for event reconstruction at future linear $e^{+}e^{-}$ colliders, Pandora has been successfully applied for event reconstruction at LArTPC experiments including the MicroBooNE experiment \cite{pandorauboone}.  Pandora brings a multi-algorithm philosophy to event reconstruction, whereby algorithms are sequentially applied to build up the reconstruction from the raw inputs.  Each algorithm is designed to be simple and conservative in order to not introduce errors that would require resolving by subsequent algorithms.  Pandora now also incorporates machine learning techniques, such as Boosted Decision Trees (BDTs) and support vector machines, to drive key decisions that have to be made at certain junctions of the reconstruction. 
+Pandora is a software package that has been developed for event reconstruction in high energy physics and is now in use at ProtoDUNE-SP.  It consists of a framework, the Pandora Software Development Kit (SDK) \cite{pandorasdk}, and a number of experiment-specific content libraries containing pattern-recognition logic.  Originally developed for event reconstruction at future linear $e^{+}e^{-}$ colliders, Pandora has since been successfully applied to event reconstruction at LArTPC experiments including MicroBooNE \cite{pandorauboone}.  Pandora brings a multi-algorithm philosophy to event reconstruction, whereby up to seventy five algorithms are sequentially applied to develop the reconstruction from the raw inputs.  Each algorithm is designed to be simple and conservative in order to not introduce errors that would require resolving by subsequent algorithms.  Pandora now also incorporates machine learning techniques, such as Boosted Decision Trees (BDTs) and support vector machines, to drive key decisions that have to be made at certain junctions of the LArTPC reconstruction. 
 
-The Pandora reconstruction algorithms used at ProtoDUNE-SP mirror those used at MicroBooNE, which are extensively described in \cite{pandorauboone}.  Therefore, the aim of this paper is to give an overview of thsoe algorithms, highlighting specific ProtoDUNE-SP related developments, and to evaluate the performance of Pandora for both ProtoDUNE-SP simulation and data.  Section \ref{sec:protodunesp} describes the ProtoDUNE-SP detector and section \ref{sec:patrec} described the Pandora reconstruction.  Section \ref{sec:assesmentpatrec} demonstrate an assessment of the pattern performance for both ProtoDUNE-SP simulation and data.  
-
-%-Abstract and introduction, covering Pandora background, its use across LArTPC programme, ProtoDUNE and aspects of the pattern recognition problem specific to ProtoDUNE.
-%-ProtoDUNE details.
-%-Pattern recognition. We?d reference the MicroBooNE algorithm description, give an executive summary of PandoraCosmic and explain how PandoraTestBeam differs from PandoraNu. In the MicroBooNE paper, we used a two-pass reconstruction, but explicitly said that this would become more sophisticated soon. This then allows us to explain the consolidated reconstruction properly, making this a major communication goal of the paper. Includes stitching, more on slicing, beam particle id.
-%-Performance assessment, using MC and metrics consistent with MicroBooNE paper to assess quality of pattern recognition, understand contributions to efficiency, etc., but then moving into real data plots. Inclusion of all of the latest and greatest plots, with (ideally!) explanation of the key features.
-%-Concluding comments (short).
+The Pandora reconstruction algorithms used at ProtoDUNE-SP mirror those used at MicroBooNE, which are extensively described in \cite{pandorauboone}.  Therefore, the aim of this paper is to give an overview of those algorithms, highlighting specific ProtoDUNE-SP related developments, and to evaluate the performance of Pandora for both ProtoDUNE-SP simulation and data.  Section \ref{sec:protodunesp} describes the ProtoDUNE-SP detector and section \ref{sec:patrec} described the Pandora reconstruction.  Section \ref{sec:assesmentpatrec} demonstrates an assessment of the pattern performance for both ProtoDUNE-SP simulation and data.  
 
 \section{ProtoDUNE-SP}
 \label{sec:protodunesp}
-The ProtoDUNE-SP detector is a single phase liquid argon time projection chamber that is extensively described in \cite{pdtdr}.  Only the experiment details related to the pattern recognition side of the reconstruction are discussed in the following section.
+The ProtoDUNE-SP detector is extensively described in \cite{pdtdr}.  Only the experiment details related to the pattern recognition side of the reconstruction are discussed in the following section.  The detector is a single-phase LArTPC with a rectangular cuboid geometry with the following dimensions: 7.4~m (horizontal), 6.0~m (vertical) and 7.0~m (longitudinal).  The ProtoDUNE-SP detector has a total volume of 0.77~kt making it the largest monolithic LArTPC constructed to date.  The cryostat capacity required to accommodate that mass of argon is ~580~$\text{m}^{3}$.  The nominal electric field in the active volume is 500~V/cm.  This is provided by the Cathode Plane Assembly (CPA), which is held at -180~kV, while the Anode Plane Assemblies (APAs) is effectively grounded due to the presence of a field cage.  Although data was taken by ProtoDUNE-SP using a range of applied electric field strengths, the following studies show only data taken using the nominal electric field configuration.  The anode plane assembly houses three planes of wires, two induction, hereby referred to as \textit{u} and \textit{v}, and one collection, \textit{w}.  The pitch of \textit{u} and \textit{v} is 4.669~mm, while the pitch of the \textit{w} is 4.790~mm.  The \textit{u} and \textit{v} wire planes are aligned at $\pm35.7^{0}$ to the vertical, while the \textit{w} plane wires are vertical.  A right handed Cartesian coordinate system is used at ProtoDUNE-SP: $x$ defines the drift direction, $y$ the vertical and $z$ the remaining orthogonal direction.  The test beam for ProtoDUNE-SP is directed primarily along the positive $z$ direction.  
 
-The detector is a single-phase LArTPC with a rectangular cuboid geometry with the following dimensions: 7.4~m (horizontal), 6.0~m (vertical) and 7.0~m (longitudinal).  The ProtoDUNE-SP detector has a total volume of 0.77~kt making it the largest monolithic single phase LArTPC constructed to date.  The cryostat capacity required to accommodate that mass of argon is ~580~$ \text{m}^{3}$.  The nominal electric field in the active volume is 500~V/cm.  This is provided by the Cathode Plane Assembly (CPA), which is held at -180~kV, while the Anode Plane Assemblies (APAs) is effectively grounded due to the presence of a field cage.  The anode plane assembly houses three planes of wires, two induction, hereby referred to as \textit{u} and \textit{v}, and one collection, \textit{w}.  The pitch of \textit{u} and \textit{v} is 4.669~mm, while the pitch of the \textit{w} is 4.790~mm.  The \textit{u} and \textit{v} wire planes are aligned at $\pm35.7^{0}$ to the vertical, while the \textit{w} plane wires are vertical.  A right handed Cartesian coordinate system is used at ProtoDUNE-SP: $x$ defines the drift direction, $y$ the vertical and $z$ the remaining orthogonal direction.  The test beam for ProtoDUNE-SP is directed primarily along the positive $z$ direction.  
-
-Each wire plane measures the drift time, relative to the beam trigger offset, of any induced or collected charge signals.  Hits are then formed from the waveforms produced from each wire by fitting the waveforms with a Gaussian.  Prior to the fitting, various detector effects are removed to reduce the background noise.  Each wire plane yields a 2D image of particle interactions in the LArTPC that forms the input to the pattern recognition.
+Each wire plane measures the drift time, relative to the beam trigger offset, of any induced or collected charge signals.  The drift time, the time taken for a charge to travel in the applied electric field from the CPA to the APA, is 2250~$\mu$s.  The start and end readout times, relative to the beam trigger offset, are -250~$\mu$s and 2750~$\mu$s respectively.  This ensures that any charge deposited in the detector as the beam trigger time will be measured.  Hits are then formed from the waveforms produced from each wire by fitting the waveforms with a Gaussian distribution.  Prior to the fitting, various detector effects are removed to reduce noise.  For data this process consists of the mitigation of noisy readout wires, the removal of coherent and high-frequency noise from the wire signals and the deconvolution of the wire signals.  The deconvolution procedure identifies and vetoes signals on a given wire that were produced by induction caused by an adjacent wire collecting charge.  \todo{Cite?}  Each wire plane yields a 2D image of particle interactions in the LArTPC that forms the input to the pattern recognition.
 
 Figure \ref{fig:inputhits} shows the event topology for a typical ProtoDUNE-SP event in each of the three wire plane views.  In general test beam particle interactions produce complex particle hierarchies involving both track and shower oriented topologies, while cosmic-ray muons produce highly track oriented topologies.  As ProtoDUNE-SP is a surface detector, the majority of the collected charge signals will originate from cosmic-ray muons.  The drift time for any hit produced from a cosmic-ray muon is ambiguous due to drift time being defined relative to the triggered beam time.
 
@@ -155,7 +150,7 @@ The CPA and APA planes in ProtoDUNE-SP contain three independent modules giving 
 
 The test beam contains a mixture of particle species; $\pi^{+}$, $e^{+}$, $\mu^{+}$, $K^{+}$ and \textit{p}.  The momentum of the beam can be varied from 0.3 to 7~GeV/c with a resolution of $\Delta p/p \leq 3\%$ \cite{pdtdr}.  The test beam enters the LArTPC through the low \textit{z} face and has a transverse beam size in the \textit{x-y} plane of $\approx$~1~cm.
 
-A trigger system is present to identify the particle species and momentum of the test beam particle prior to the particle entering the TPC.  Beam halo particles are also present in the ProtoDUNE-SP test beam.  Beam halo are test beam particles that are produced in the creation of the beam, but that do not have the appropriate momentum to be guided to the expected location in the TPC.  These particles are not measured by the triggered but do appear in the detector surrounding the beam as illustrated in figure \ref{fig:eventdecomp}.
+A trigger system is present to identify the particle species and momentum of the test beam particle prior to the particle entering the TPC.  The trigger system used for particle identification consists of eXperimental Beam Profile Fibre monitors (XBPFs), eXperimental Beam Trigger Fibre monitors (XBTFs) and Chrenkov detectors.  The XBPFs are used in unison to form a momentum spectrometer, the XBTFs give fast signal measurements allowing a time-of-flight measurement to be made for the triggered particles and the Chrenkov detectors are configured to produce signals for specific particle species.  Beam halo particles are also present in the ProtoDUNE-SP test beam.  Beam halo are test beam particles that are produced in the creation of the beam, but that do not have the appropriate momentum to be guided to the expected location in the LArTPC.  These particles are not measured by the triggered but do appear in the detector surrounding the beam as illustrated in figure \ref{fig:eventdecomp}.
 
 \begin{figure}
 \centering
@@ -166,7 +161,10 @@ A trigger system is present to identify the particle species and momentum of the
 
 As ProtoDUNE-SP is a surface detector, a crucial pattern recognition goal is to distinguish the cosmic-ray muon backgrounds from the test beam particle signal.  Several other factors also affect the pattern recognition including noise filtering, fitting of the waveform and deconvolution of hit charge deposited on adjacent wires.  
 
-\todo{Reference for noise filtering etc...}
+\todo{Trigger info}
+
+\subsection{Space Charge Effects}
+LArTPC detectors suffer from space charge effects, which is the build up of slow moving positive ions in the detector that are formed via the ionization that produce the signals in the detector \cite{spacecharge}.  This effect distorts the electric field and hence the drift velocity of ionization electrons within the LArTPC.  Assuming the nominal drift velocity, i.e. without the space charge effect, the position of the reconstructed hits within the detector are distorted with respect to their true position.  The space charge effect was included in the simulation used to produce the results that follow.  An additional model of the space charge effect, fluid flow, that more accurately represents the asymmetric nature of the space charge effect, but when compared to data appears to underestimate the magnitude of the effect, is included in the study of tagging cosmic-ray muons in section \ref{sec:crmetrics}. 
 
 \section{LArTPC Pattern Recognition}
 \label{sec:patrec}
@@ -384,7 +382,9 @@ Beam Momenta [GeV] & Reconstructed Efficiency  \\
 
 \subsubsection{Cosmic-Ray Muon Reconstruction Metrics}
 \label{sec:crmetrics}
-Figure \ref{fig:crrecoeff} shows the reconstruction efficiency for cosmic-ray muons as a function of the number of hits in the detector, which yields an integrated efficiency of 95\%.  The purity and completeness of the reconstructed cosmic-ray muons are shown in figure \ref{fig:crrecopurcom}, both of which show strong peaks at one.
+Figure \ref{fig:crrecoeff} shows the reconstruction efficiency for cosmic-ray muons as a function of the number of hits in the detector.  The overall integrated reconstruction efficiency for cosmic-ray muons is 95\%.  The reconstruction efficiency increases as a function of the number of hits, starting at $\approx 50\%$ for $\approx 15$ hits increasing and then plateauing at $95\%$ for $\approx 150$ hits.  The reconstruction inefficiency is due to cosmic-ray muons being absorbed into larger neighbouring particles.  This is more common for cosmic-ray muons producing a small number of hits, but it is also possible for large cosmic-ray muons if the surrounding topology is sufficiently diverse.
+
+The purity and completeness of the reconstructed cosmic-ray muons are shown in figure \ref{fig:crrecopurcom}, both of which have very clear peaks at one.  These figures show that 97.6\% of reconstructed cosmic-ray muons have a purity greater than 80\% and 81.9\% of reconstructed cosmic-ray muons have a completeness greater than 80\%.  The low completeness tail is caused by the reconstruction splitting up a cosmic-ray muon track into two distinct particles.  This can occur if a gap is present in the track-like hits or if the event topology involves crossing cosmic-ray muons in 3D.  The purity is typically close to 1, which indicates merging distinct cosmic-ray muons together is unlikely. 
 
 \begin{figure}
 \centering
@@ -400,7 +400,11 @@ Figure \ref{fig:crrecoeff} shows the reconstruction efficiency for cosmic-ray mu
 \label{fig:crrecopurcom}
 \end{figure}
 
-It is also possible to tag the true $T_{0}$ of reconstructed cosmic-ray muons if they are stitched by the process discussed in section \ref{sec:consolidatedreco}.  The distribution of the resolution of the reconstructed $T_{0}$ for cosmic-ray muons is shown in figure \ref{fig:crt0res}.  As expected, the impact of space charge \todo{description and reference to space charge} in the simulation leads to a degradation in the $T_{0}$ resolution and the addition of the fluid flow model, which includes asymmetric space charge effects, leads to further degradation.  
+It is also possible to identify the time, $T_{0}$, that a cosmic-ray muon enters the LArTPC if they are stitched by the process discussed in section \ref{sec:consolidatedreco}.  The distribution of the $T_{0}$ resolution, the difference between the reconstructed and true value of $T_{0}$, for stitched cosmic-ray muons is shown in figure \ref{fig:crt0res}.  Without space charge effects, the mean of the resolution distribution is -0.3~$\mu$s and the full width at half maximum (FWHM) is 0.6~$\mu$s.  
+
+When the space charge effect is enabled in simulation, the mean shifts to 2.2~$\mu$s and the FWHM is 1.40~$\mu$s.  The distortion of the drift velocity due to the build up of charge in the detector leads to a distortion of the pointing information used in the stitching procedure.  In particular, tracks shorten along the transverse directions to the drift direction and they bow \cite{spacecharge}.  These affect illustrated in figure \ref{fig:spacechargetrack}, which shows a reconstructed comsic-ray muon in simulation that has been stitched in 3D alongside the true 3D trajectory of the cosmic-ray muon.  The bowing affect results in an overestimation in the shift in the drift direction, and hence the reconstructed $T_{0}$, required to stitch pairs of reconstructed track-like particles from separate drift volumes together.  As the magnitude of the space charge effect varies across the LArTPC, the degree of the overestimation of the $T_{0}$ also varies, resulting in a broadening of the $T_{0}$ resolution distribution when applying the space charge effect in simulation. 
+
+Similarly, applying the fluid flow model containing asymmetric space charge effects, leads to a further degradation in the $T_{0}$ resolution; the FWHM increases to 2.80~$\mu$s, while the mean remains largely unchanged at 2.2~$\mu$s.  This is expected because the magnitude of the bowing effect impacting each track is independent, as the space charge effect being simulated is asymmetric across the two central ProtoDUNE-SP drift volumes.  This results in a broadening of the resolution of the reconstructed $T_{0}$ with respect to the default space charge effect simulation because the distortion of the pointing information used in the stitching process for each track are no longer correlated.
 
 \begin{figure}
 \centering
@@ -409,28 +413,35 @@ It is also possible to tag the true $T_{0}$ of reconstructed cosmic-ray muons if
 \label{fig:crt0res}
 \end{figure}
 
-In order to give context to the topologies that the reconstruction is faced with at ProtoDUNE-SP an estimate of the number of cosmic-ray muons passing through the detector per event has been made.  The number of reconstructed cosmic-ray muons matched to clear cosmic-ray muons, i.e. depositing more than 100 hits in the detector, is shown as a function of the number of clear cosmic-ray muons in figure \ref{fig:crnperevt}.  This shows that, on a per event basis, the reconstruction is predominantly working on the reconstruction of cosmic-ray muons.
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{Figures/EventDisplays/MC/SpaceChargeEffect.pdf}
+\caption{The 3D hits for a reconstructed cosmic-ray muon that has been stitched.  The red and blue hits highlight hits reconstructed in the left and right central drivt volumes of ProtoDUNE-SP, while the black dotted line represents the true trajectory of the cosmic-ray muon.  The impact of the space charge effect, i.e. the shortening of the track alone directions orthogonal to the drift direction and the bowing of the tracks, are clearly visible.}
+\label{fig:spacechargetrack}
+\end{figure}
+
+In order to give context to the topologies that the reconstruction is faced with at ProtoDUNE-SP, an estimate of the number of cosmic-ray muons passing through the detector per event in simulation has been made.  The number of reconstructed cosmic-ray muons matched, via the procedure discussed at the start of this section, to clear cosmic-ray muon MC particles, i.e. that deposit more than 100 hits in the detector, is shown as a function of the total number of clear cosmic-ray muons on a per event basis in figure \ref{fig:crnperevt}.  This distribution follows a linear trajectory, with a gradient close to one, indicating that the reconstruction on average yields one reconstructed particle per large cosmic-ray.  The mean number of large cosmic-ray muons per event is $50\pm8$, while the mean number of matched reconstructed particles to those cosmic-ray muons is $54\pm9$.  These figures demonstrate that on per event basis, cosmic-ray muons vastly outnumber triggered test beam particles.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.75\textwidth]{Figures/Metrics/MC/Cosmics/CRMatchesCosmicRayEvent.pdf}
-\caption{The number of matched reconstructed cosmic-ray muons per event as a function of the true number of cosmic-ray muons for cosmic-ray muons depositing more than 100 hits in the detector.  The cut at 100 hits allows a clearer comparison to be made to data in subsequent studies due to the higher reconstruction efficiency for these cosmic-ray muons with respect to those depositing less than 100 hits.}
+\includegraphics[width=0.5\textwidth]{Figures/Metrics/MC/Cosmics/CRMatchesCosmicRayEvent.pdf}
+\caption{The number of reconstructed cosmic-ray muons matched, via the procedure discussed at the start of section \ref{sec:mcmetrics}, to clear cosmic-ray muon MC particles as a function of the total number of clear cosmic-ray muons on a per event basis.  A clear cosmic-ray muon is defined as producing at least 100 hits in the detector.  Applying this cut gives a more precise estimation of the true number of cosmic-ray muons entering ProtoDUNE-SP due to the improved reconstruction efficiency for this subset of cosmic-ray muons.}
 \label{fig:crnperevt}
 \end{figure}
 
 \subsection{Data}
-
+\label{sec:data}
 ProtoDUNE-SP took test beam data at CERN between October and December 2018.  What follows is a flavour of how the Monte-Carlo metrics discussed above compare to data.  This data presents the Pandora reconstruction with several unique challenges that have not been seen at other active LArTPC experiments, such as stitching of cosmic-ray muons due to the presence of multiple drift volumes and the reconstruction of test beam particle interactions as opposed to neutrino interactions.  
 
 \subsubsection{Test Beam Metrics}
-A crucial metric describing the performance of the pattern recognition at ProtoDUNE-SP is the triggered test beam particle reconstruction efficiency.  This metric folds in effects from each step of the reconstruction procedure and crucially the test beam particle id step.  In order for a reconstructed event to be counted as efficient, a reconstructed object must be classified as originating from the test beam.  As access to the underlying truth information for data is not possible, the reconstruction metric used for this data MC comparison does not use the matching procedure described in section \ref{sec:mcmetrics}.  Instead an event is deemed efficient when for:
+A crucial metric describing the performance of the pattern recognition at ProtoDUNE-SP is the triggered test beam particle reconstruction efficiency.  This metric folds in effects from each step of the reconstruction procedure and crucially the test beam particle identification step.  In order for a reconstructed event to be counted as efficient, a reconstructed object must be classified as originating from the test beam.  As access to the underlying truth information for data is not possible, the reconstruction metric used for this data MC comparison does not use the matching procedure described in section \ref{sec:mcmetrics}.  Instead an event is deemed efficient when:
 
 \begin{itemize}
-    \item \textbf{Data} The trigger is active and indicates the presence of a single particle and there is a reconstructed test beam particle in the event output.
-    \item \textbf{Monte-Carlo} There is a triggered test beam particle in the MC particle hierarchy and there is a reconstructed test beam particle in the event output.
+\item \textbf{Data} The ProtoDUNE-SP trigger is active and indicates the presence of a single particle and there is a reconstructed test beam particle in the event output.
+\item \textbf{Monte-Carlo} There is a triggered test beam particle in the MC particle hierarchy and there is a reconstructed test beam particle in the event output.
 \end{itemize}
 
-The reconstruction efficiency for ProtoDUNE for separate beam momentum runs is shown in table \ref{tab:dataeff}.  
+The reconstruction efficiency for ProtoDUNE for separate beam momentum runs is shown in table \ref{tab:dataeff}.  The ProtoDUNE trigger also measures the momentum of the triggered test beam particle, therefore the reconstruction efficiency is plotted as a function of the triggered test beam particle momentum in figure \ref{fig:datamcrecoeff}.  The primary loss mechanisms in the reconstruction efficiency are cosmic-ray muon and beam halo contamination of the slice containing the target triggered beam particle.  The reconstruction efficiency is encouraging for both data and simulation with integrated efficiencies of $81.7 \pm 0.1$~\% and $86.3 \pm 0.3$~\% respectively.  As a function of momentum additional features are present in the reconstruction efficiency.  In particular, at low momentum, where the reconstruction efficiency for data is lower than simulation, and high momentum, where the reconstruction efficiency is higher for data than simulation.  The disparity at low momenta is due to the trigger being active for certain events, but no clear test beam particle appearing in the detector. \todo{Expect request for justification}  For high momenta, the disparity is due to an overestimation of the beam halo in simulation.  This is evident from figure \ref{fig:tbrecoeffbrkdwn}, which indicates that the impact of cosmic-ray muons at high beam momenta is almost negligible, while the beam halo dominates in inefficiencies in the reconstruction efficiency.  
 
 \begin{table}
 \centering
@@ -449,50 +460,53 @@ Beam Momenta [GeV] & Reconstructed Efficiency  \\
 \end{tabular}
 \end{table}
 
-The ProtoDUNE trigger also measures the momentum of the triggered test beam particle, therefore the reconstruction efficiency is plotted as a function of the triggered test beam particle momentum in figure \ref{fig:datamcrecoeff}.  
-
 \begin{figure}
-\includegraphics[width=1.0\textwidth]{Figures/Metrics/Data/Beam/BeamParticleEfficiencyVsMomentum.pdf}
-\caption{The test beam particle reconstruction efficiency as a function of the number of hits in the test beam particle and the test beam particle momentum.}
+\centering
+\includegraphics[width=0.75\textwidth]{Figures/Metrics/Data/Beam/BeamParticleEfficiencyVsMomentum.pdf}
+\caption{The triggered test beam particle reconstruction efficiency for ProtoDUNE-SP as a function of the particle momentum in data and simulation.}
 \label{fig:datamcrecoeff}
 \end{figure}
 
-Overall, there is a typically good agreement between the reconstruction efficiency for data and MC with integrated efficiencies of ~80\% and ~80\% respectively.  As a function of momentum, additional features are present.  In particular, at low momentum, where the reconstruction efficiency for data is lower than MC, and high momentum, where the reconstruction efficiency is higher for data than MC.  The disparity at low momenta is due to the trigger being active for certain events, but no clear test beam particle appearing in the detector. \todo{Expect request for justification}  For high momenta, the disparity is due to an overestimation of the beam halo in the MC samples.  This is evident from figure \ref{fig:tbrecoeffbrkdwn}, which indicates that the impact of cosmic-ray muons at high beam momenta is almost negligible, while the beam halo dominates in inefficiencies in the reconstruction efficiency.  
+In addition to the reconstruction efficiency it is also possible to evaluate higher level metrics for the reconstructed test beam particle describing the quality of the reconstructed object.  For example, figure \ref{fig:openingangle} shows the opening angle between the reconstructed and expected direction of the triggered test beam particle for all triggered test beam particle species.  In data the trigger provides the measurement of the expected particle direction, while in simulation MC truth information is used.  In both data and simulation this distributions peak at low values of opening angle, $\pi/50$ and $\pi/40$ respectively.  The distribution is tighter for simulation than data; $47.3\pm0.5$\% of events have an opening angle less than $\pi/10$ in simulation, while $35.4\pm0.2$\% of events for of events have an opening angle less than $\pi/10$ in data.  In both cases there is a long tail extending up to $\pi/2$.  The opening angle distribution for data is broader as it replies upon the resolution of the ProtoDUNE-SP trigger system, while simulation has access to the truth information.  
 
-In addition to the reconstruction efficiency it is also possible to evaluate higher level metrics for the reconstructed test beam particle describing the quality of the reconstructed object.  For example figure \ref{fig:openingangles} shows the opening angle between the reconstructed and expected direction of the triggered test beam particle.  For data the trigger provides a measurement of the particle direction, while for MC truth information is used for comparison.  While differences are present it is encouraging that both of these distributions peak at low values of opening angle.  The same distributions divided into track and shower like triggered test beam particles are included.  The broader distribution for showers indicates that, as expected, estimation of the direction of a clean single track like 3D particle is more precise than the estimation of a more disperse shower like object.   
+Figures \ref{fig:openingangleshw} and \ref{fig:openingangletrk} show the opening angle distribution for $e^{+}$ and $\pi^{+}$ triggered test beam particle species respectively.  These distributions mirror the cumulative distribution, being almost identical within statistical errors.  This indicates that the opening angle distribution is not reliant upon the topology, i.e. track-like or shower-like natures, of the triggered test beam particle.
 
 \begin{figure}
-\subfloat[]{\includegraphics[width=1.0\textwidth]{Figures/Metrics/Data/Beam/BeamParticleOpeningAngle.pdf}\label{fig:openingangle}} \\
-\subfloat[]{\includegraphics[width=0.5\textwidth]{Figures/Metrics/Data/Beam/BeamParticleOpeningAngleElectron.pdf}\label{fig:openingangleshw}}
+\centering
+\subfloat[]{\includegraphics[width=0.75\textwidth]{Figures/Metrics/Data/Beam/BeamParticleOpeningAngle.pdf}\label{fig:openingangle}} \\
+\subfloat[]{\includegraphics[width=0.5\textwidth]{Figures/Metrics/Data/Beam/BeamParticleOpeningAnglePositron.pdf}\label{fig:openingangleshw}}
 \subfloat[]{\includegraphics[width=0.5\textwidth]{Figures/Metrics/Data/Beam/BeamParticleOpeningAnglePiPlus.pdf}\label{fig:openingangletrk}}
-\caption{\protect\subref{fig:openingangle} the opening angle between a linear fit to the start of the reconstructed test beam particle as it enters the TPC and the MC truth direction direction.  \protect\subref{fig:openingangleshw} and \protect\subref{fig:openingangletrk} show the same distributions for $e^{+}$ and $\pi^{+}$ triggered particles only.}
+\caption{\protect\subref{fig:openingangle} The opening angle between a linear fit to the reconstructed test beam particle as it enters the LArTPC and the direction of the triggered beam particle from either the trigger (data) or MC truth (simulation).  \protect\subref{fig:openingangleshw} and \protect\subref{fig:openingangletrk} show the same distributions for $e^{+}$ and $\pi^{+}$ test beam particles respectively.}
 \label{fig:openingangles}
 \end{figure}
 
 \subsubsection{Cosmic-Ray Muon Reconstruction Metrics}
+Reconstruction metrics for reconstructed cosmic-ray muon data have also been evaluated.  Figure \ref{fig:ncrdata} shows the number of reconstructed particles tagged as clear cosmic-ray muons per event in ProtoDUNE-SP.  For a cosmic-ray muon to be tagged as clear it must deposit at least 100 hits in the detector.  This cut is applied in order to define a substantial, clear signal in the detector.  Furthermore, applying this cut yields a minimum reconstruction efficiency of ~90\%, based on the simulated efficiencies in figure \ref{fig:crrecoeff}, which ensures this metric gives an accurate reflection of the true number of clear cosmic-ray muons entering ProtoDUNE-SP.
 
-Reconstruction metrics for reconstructed cosmic-ray muon data have also been evaluated.  Figure \ref{fig:ncrdata} shows the number of reconstructed particles tagged as clear cosmic-ray muons per event in ProtoDUNE.  For a cosmic-ray muon to be tagged as clear it must deposit at least 100 hits in the detector.  This cut is applied in order to ensure a minimum reconstruction efficiency of ~90\%, based on the MC efficiencies in figure \ref{fig:crrecoeff}.  Therefore, this metric gives an accurate reflection of the true number of large cosmic-ray muons in the detector.  
-
-There is excellent agreement between data and MC in the number of clear cosmic-ray muons per event, with both distributions peaking around 50 cosmic-ray muons per event.  The width of both distributions is similar, however the MC distribution is slightly broader and contains a high tail indicating that the MC flux is slightly overestimated in simulation.  
+There is a close agreement between data and simulation in the number of clear cosmic-ray muons per event, with the data distribution peaking at $53.2\pm0.02$ and the simulated distribution peaking at $54.3\pm0.06$.  The standard deviation of these distributions is also similar; $8.47\pm0.01$ for data and $9.27\pm0.04$ for simulation.  The simulated distribution is broader and contains a tail at large numbers of cosmic-ray muons per event, indicating that the cosmic-ray muon flux has been slightly overestimated in simulation.  
 
 \begin{figure}
-\includegraphics[width=1.0\textwidth]{Figures/Metrics/Data/Cosmics/NumberofReconstructedCosmicRays.pdf}
-\caption{The number of reconstructed clear cosmic-ray muon particles per event.  A reconstructed particle is classified as a clear cosmic-ray muon if it has been reconstructed and tagged as a cosmic-ray muon and has deposited at least 100 hits in the detector.}
+\centering
+\includegraphics[width=0.75\textwidth]{Figures/Metrics/Data/Cosmics/NumberofReconstructedCosmicRays.pdf}
+\caption{The number of reconstructed substantial cosmic-ray muon particles per event.  A reconstructed particle is classified as a clear cosmic-ray muon if it has been reconstructed and tagged as a cosmic-ray muon and has deposited at least 100 hits in the detector.}
 \label{fig:ncrdata}
 \end{figure}
 
-The distribution of the reconstructed $T_{0}$ values for cathode crossing cosmic-ray muons is shown in figure \ref{fig:recoT0data}.  The width of this distribution is determined by the readout time window and the drift time of the ProtoDUNE detector.  Both distributions for data and MC are in excellent agreement.  There height of the distribution is determined by the normalization of the plot.  There is a peak in the data reconstructed $T_{0}$ around 50~$\mu$s that is currently under investigation.  % Most likely due to CPA supports.
+The distribution of the reconstructed $T_{0}$ values for cathode crossing cosmic-ray muons is shown in figure \ref{fig:recoT0data}.  The width of this distribution is determined by the readout time window of the ProtoDUNE-SP detector; the smallest $T_{0}$ that can be identified is the start of the readout time window, -250~$\mu$s, minus the drift time, 2250~$\mu$s, while the largest is the end of the readout time window, 2750~$\mu$s, minus the drift time.  Both the data and simulated distributions are consistent with uniform distributions that span the range of $T_{0}$ that it is possible to stitch in ProtoDUNE-SP detector.  In this case the height of the distribution is determined by the normalization of the plot.
+
+\info{The peak at 75~$\mu$s appears to be due to a sticky code related problem and is expected to disappear when the plots are updated.}
 
 \begin{figure}
-\includegraphics[width=1.0\textwidth]{Figures/Metrics/Data/Cosmics/StitchedT0.pdf}
-\caption{The reconstructed $T_{0}$ distribution for data and MC.}
+\centering
+\includegraphics[width=0.75\textwidth]{Figures/Metrics/Data/Cosmics/StitchedT0.pdf}
+\caption{The reconstructed $T_{0}$ distribution in ProtoDUNE-SP for cathode crossing cosmic-ray muons obtained from the Pandora stitching process in data and simulation.}
 \label{fig:recoT0data}
 \end{figure}
 
 \section{Conclusions}
-A summary of Pandora, a LArTPC pattern recognition software package, has been presented alongside relevant modifications allowing it to be applied to ProtoDUNE-SP.  The performance of Pandora has been extensively evaluated for simulation of the ProtoDUNE-SP detector.  Similarly, several pattern recognition metrics have been created and evaluated enabling a data MC comparison to be applied.  While differences are present, there is a generally good agreement between the two.  
+A summary of Pandora, a LArTPC pattern recognition software package, has been presented alongside relevant modifications allowing it to be applied to ProtoDUNE-SP.  The performance of Pandora has been extensively evaluated for simulation of the ProtoDUNE-SP detector.  Similarly, several pattern recognition metrics have been created and evaluated enabling a data simulation comparison to be applied.
 
-The evaluation of the performance of Pandora for ProtoDUNE-SP is an important stepping stone in developing pattern recognition for the DUNE far detector.  The efficiencies quoted here must not be too readily extrapolated to the far detector.  Neutrino interactions in the far detector will be significantly easier to reconstruct in comparison to ProtoDUNE-SP because, unlike the underground far detector, ProtoDUNE-SP is a surface detector resulting in extensive cosmic-ray muon backgrounds.  The peak of the momentum distribution is  similar to what is expected from primary particles produced from neutrino interactions \todo{reference this}, therefore, the successful reconstruction of test beam particles is extremely encouraging for preparing a reconstruction for the DUNE far detector.  Additionally over the coming years developments to the pattern recognition are to be expected from the development of new algorithms and the incorporation of deep learning techniques.  
+The evaluation of the performance of Pandora for ProtoDUNE-SP is an important stepping stone in developing pattern recognition for the DUNE far detector, but efficiencies quoted here must not be too readily extrapolated to the far detector.  Neutrino interactions in the far detector will be significantly easier to reconstruct in comparison to ProtoDUNE-SP because, unlike the underground far detector, ProtoDUNE-SP is a surface detector resulting in extensive cosmic-ray muon backgrounds.  The peak of the momentum distribution is  similar to that expected from primary particles produced from neutrino interactions \todo{reference this}, so the successful reconstruction of test beam particles is extremely encouraging for preparing a reconstruction for the DUNE far detector.  Additionally over the coming years developments to the pattern recognition are to be expected from the development of new algorithms and the incorporation of deep-learning techniques in the Pandora multi-algorithm approach.  
 
 \begin{acknowledgements}
 This material is based upon work supported by the following: The European Union’s Horizon 2020 Research and Innovation programme under grant agreement No. 776262.
@@ -516,6 +530,8 @@ Marshall, J. S. and Thomson, M. A., The Pandora Software Development Kit for Pat
 Acciarri, R. and others, The Pandora multi-algorithm approach to automated pattern recognition of cosmic-ray muon and neutrino events in the MicroBooNE detector, Eur. Phys. J., C78, 82 (2018)
 \bibitem{pdtdr}
 Abi, B. and others [DUNE Collaboration], arXiv:1706.07081 [physics.ins-det]
+\bibitem{spacecharge}
+Mooney, M, The MicroBooNE Experiment and the Impact of Space Charge Effects, arXiv:1511.01563 [physics.ins-det]
 %\bibitem{RefJ}
 % Format for Journal Reference
 %Author, Article title, Journal, Volume, page numbers (year)
